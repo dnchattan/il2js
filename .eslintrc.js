@@ -7,6 +7,7 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   extends: ['airbnb-typescript', 'prettier'],
   rules: {
+    'no-plusplus': 'off',
     'import/prefer-default-export': 'off',
     '@typescript-eslint/comma-dangle': [
       'error',
