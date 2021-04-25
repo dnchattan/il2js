@@ -1,9 +1,9 @@
 import ts, { factory } from 'typescript';
+import { assert } from '@il2js/core';
 import { TsGenContext } from '../TsGenContext';
 import { Il2CppTypeInfo } from '../../../Types';
 // eslint-disable-next-line import/no-cycle
 import { findKnownType } from './StructHelpers';
-import { assert } from '../../../Helpers';
 import { getTypeMapping } from '../TypeMappings';
 
 const reservedNames = new Set(['name', 'size']);

@@ -45,9 +45,6 @@ export function fixupType(typeDef: Il2CppTypeInfo): Il2CppTypeInfo {
   if (typeDef.IsPrimitive && typeDef.TypeName === 'object') {
     return BuiltinTypes.UnknownObject;
   }
-  if (typeDef.TypeName === 'Fixed' && typeDef.Namespace === 'Plarium.Common.Numerics') {
-    return BuiltinTypes.Fixed;
-  }
   if (typeDef.TypeArguments) {
     typeDef.TypeArguments = typeDef.TypeArguments.map((typeArg) => fixupType(typeArg));
   }

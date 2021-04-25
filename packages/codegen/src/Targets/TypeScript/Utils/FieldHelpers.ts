@@ -1,9 +1,9 @@
 import ts, { factory } from 'typescript';
+import { assert } from '@il2js/core';
 import { TsGenContext } from '../TsGenContext';
 import { Il2CppFieldInfo, Il2CppTypeInfo } from '../../../Types';
 // eslint-disable-next-line import/no-cycle
 import { fixName, generateTypePath, generateTypeReference } from './TypeNameHelpers';
-import { assert } from '../../../Helpers';
 import { getTypeMapping } from '../TypeMappings';
 
 export function generateReadPrimitiveCall(field: Il2CppFieldInfo): ts.CallExpression {

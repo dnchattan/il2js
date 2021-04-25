@@ -2,13 +2,6 @@ import { Il2CppTypeEnum, Il2CppTypeInfo } from '../../../Types';
 
 let typeIndex = 0;
 export const BuiltinTypes = {
-  Fixed: <Il2CppTypeInfo>{
-    Type: Il2CppTypeEnum.IL2CPP_TYPE_VALUETYPE,
-    IsPrimitive: true,
-    TypeName: 'fixed',
-    Indirection: 1,
-    TypeIndex: --typeIndex,
-  },
   UnknownObject: <Il2CppTypeInfo>{
     Type: Il2CppTypeEnum.IL2CPP_TYPE_CLASS,
     Namespace: 'il2js',
