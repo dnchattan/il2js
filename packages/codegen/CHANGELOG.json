@@ -1,0 +1,20 @@
+{
+  "name": "@il2js/codegen",
+  "entries": [
+    {
+      "date": "Sun, 25 Apr 2021 21:58:10 GMT",
+      "tag": "@il2js/codegen_v0.2.1",
+      "version": "0.2.1",
+      "comments": {
+        "patch": [
+          {
+            "comment": "initial commit",
+            "author": "dnchattan@gmail.com",
+            "commit": "02e8ecef7e99b1e2a8da640ea475ce7f8e34f535",
+            "package": "@il2js/codegen"
+          }
+        ]
+      }
+    }
+  ]
+}
