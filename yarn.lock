@@ -2254,6 +2254,15 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/ffi-napi@*":
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/@types/ffi-napi/-/ffi-napi-2.4.3.tgz#8e0194a47f1fc9a2d1e00dcae66c919ae97faa2d"
+  integrity sha512-lkSpnVM3252+IAxwqmX5zPh8Nugzz7rtTcLC8tnGaY48n/5kmrO0AV3OVQDMgSKPI5X4I3vx0yeArfGV6PlwCQ==
+  dependencies:
+    "@types/node" "*"
+    "@types/ref-napi" "*"
+    "@types/ref-struct-di" "*"
+
 "@types/find-up@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/find-up/-/find-up-4.0.0.tgz#6b74a76670477a23f0793cfaf2dafc86df59723a"
@@ -2361,12 +2370,26 @@
   resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.2.3.tgz#ef65165aea2924c9359205bf748865b8881753c0"
   integrity sha512-PijRCG/K3s3w1We6ynUKdxEc5AcuuH3NBmMDP8uvKVp6X43UY7NQlTzczakXP3DJR0F4dfNQIGjU2cUeRYs2AA==
 
-"@types/ref-napi@^1.4.1":
+"@types/ref-napi@*", "@types/ref-napi@^1.4.0", "@types/ref-napi@^1.4.1":
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/@types/ref-napi/-/ref-napi-1.4.1.tgz#cf5a5ae6a90f6cb2a1d4db21ad32ce0e7c59a6fb"
   integrity sha512-30A5bpOd+403PJCyyarGH8AOW2IowJ5AZySiGG1B4Sad5CRHt8O+cALEbSUZT+0sE456yAwB2+UjXpH+BIVN1g==
   dependencies:
     "@types/node" "*"
+
+"@types/ref-struct-di@*":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@types/ref-struct-di/-/ref-struct-di-1.1.0.tgz#4e7a20c8b2f25a6e4b3cb4a0d615835b61ab8d84"
+  integrity sha512-obdtTOGqfV/3MdouZEe2hup7fZwAK6RvusqLIL0hK/MuEBKHWpC3j/NXiC5N6zXdj7p52QB0wsnUEsdkFc+DOw==
+  dependencies:
+    "@types/ref-napi" "*"
+
+"@types/ref-union-di@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/ref-union-di/-/ref-union-di-1.0.0.tgz#e057461e9758b23813a0825e6c30e0eda4122fdf"
+  integrity sha512-naDlc/KKsMvTVcDFW53BY6RitPpzElIHuhZ8TednY2hsam5g0HLxkmYgThabtCLd4fhPX48tKEh0O8RDzu4NiA==
+  dependencies:
+    "@types/ref-napi" "*"
 
 "@types/stack-utils@^2.0.0":
   version "2.0.0"
@@ -2461,6 +2484,11 @@
   dependencies:
     "@typescript-eslint/types" "4.22.0"
     eslint-visitor-keys "^2.0.0"
+
+"@waiting/shared-types@3":
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/@waiting/shared-types/-/shared-types-3.5.1.tgz#7c9b0c38ddeb5ab0fe11731a67aa974a482bc651"
+  integrity sha512-1l20suOx44W1j3J+jGknc+eGYiqJnuRZyArs+f+ZJrw4FJ4mMtZNthSCbtAZWsyAzBg8jzZ39p07OZPVTAC4Rg==
 
 "@yarnpkg/lockfile@^1.1.0":
   version "1.1.0"
@@ -4876,6 +4904,18 @@ fb-watchman@^2.0.0:
   dependencies:
     bser "2.1.1"
 
+ffi-napi@^3.0.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/ffi-napi/-/ffi-napi-3.1.0.tgz#5bd037a26eaa4234c664e8b9d27be3719505c7bd"
+  integrity sha512-EsHO+sP2p/nUC/3l/l8m9niee1BLm4asUFDzkkBGR4kYVgp2KqdAYUomZhkKtzim4Fq7mcYHjpUaIHsMqs+E1g==
+  dependencies:
+    debug "^4.1.1"
+    get-uv-event-loop-napi-h "^1.0.5"
+    node-addon-api "^2.0.0"
+    node-gyp-build "^4.2.1"
+    ref-napi "^2.0.1"
+    ref-struct-di "^1.1.0"
+
 figgy-pudding@^3.4.1, figgy-pudding@^3.5.1:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/figgy-pudding/-/figgy-pudding-3.5.2.tgz#b4eee8148abb01dcf1d1ac34367d59e12fa61d6e"
@@ -5260,10 +5300,17 @@ get-stream@^5.0.0:
   dependencies:
     pump "^3.0.0"
 
-get-symbol-from-current-process-h@^1.0.2:
+get-symbol-from-current-process-h@^1.0.1, get-symbol-from-current-process-h@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/get-symbol-from-current-process-h/-/get-symbol-from-current-process-h-1.0.2.tgz#510af52eaef873f7028854c3377f47f7bb200265"
   integrity sha512-syloC6fsCt62ELLrr1VKBM1ggOpMdetX9hTrdW77UQdcApPHLmf7CI7OKcN1c9kYuNxKcDe4iJ4FY9sX3aw2xw==
+
+get-uv-event-loop-napi-h@^1.0.5:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/get-uv-event-loop-napi-h/-/get-uv-event-loop-napi-h-1.0.6.tgz#42b0b06b74c3ed21fbac8e7c72845fdb7a200208"
+  integrity sha512-t5c9VNR84nRoF+eLiz6wFrEp1SE2Acg0wS+Ysa2zF0eROes+LzOfuTaVHxGy8AbS8rq7FHEJzjnCZo1BupwdJg==
+  dependencies:
+    get-symbol-from-current-process-h "^1.0.1"
 
 get-value@^2.0.3, get-value@^2.0.6:
   version "2.0.6"
@@ -8718,6 +8765,16 @@ redeyed@~2.1.0:
   dependencies:
     esprima "~4.0.0"
 
+ref-napi@^2.0.0, ref-napi@^2.0.1:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/ref-napi/-/ref-napi-2.1.2.tgz#5986069d7b0ea83e1fef48239a2bd75318ce341b"
+  integrity sha512-aFl+vrIuLWUXMUTQGAwGAuSNLX3Ub5W3iVP8b7KyFFZUdn4+i4U1TXXTop0kCTUfGNu8glBGVz4lowkwMcPVVA==
+  dependencies:
+    debug "^4.1.1"
+    get-symbol-from-current-process-h "^1.0.2"
+    node-addon-api "^2.0.0"
+    node-gyp-build "^4.2.1"
+
 ref-napi@^3.0.1:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/ref-napi/-/ref-napi-3.0.2.tgz#fe71c2a09df654baa66649d783c6e5ab182c19cb"
@@ -8727,6 +8784,20 @@ ref-napi@^3.0.1:
     get-symbol-from-current-process-h "^1.0.2"
     node-addon-api "^2.0.0"
     node-gyp-build "^4.2.1"
+
+ref-struct-di@^1.1.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/ref-struct-di/-/ref-struct-di-1.1.1.tgz#5827b1d3b32372058f177547093db1fe1602dc10"
+  integrity sha512-2Xyn/0Qgz89VT+++WP0sTosdm9oeowLP23wRJYhG4BFdMUrLj3jhwHZNEytYNYgtPKLNTP3KJX4HEgBvM1/Y2g==
+  dependencies:
+    debug "^3.1.0"
+
+ref-union-di@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/ref-union-di/-/ref-union-di-1.0.1.tgz#e4a27835c8266e7ebbca9932ce9e8d950016b576"
+  integrity sha512-JWSF2BwNVtCgmEfoDGMh8S1KO07oq+T8L7cBHwcsmQmeXDZd9JNlrxU+ebSHs+jsf0qrqFFWXMCmj94Tcl26TA==
+  dependencies:
+    debug "^3.1.0"
 
 regenerate-unicode-properties@^8.2.0:
   version "8.2.0"
@@ -10388,6 +10459,26 @@ wildcard@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/wildcard/-/wildcard-2.0.0.tgz#a77d20e5200c6faaac979e4b3aadc7b3dd7f8fec"
   integrity sha512-JcKqAHLPxcdb9KM49dufGXn2x3ssnfjbcaQdLlfZsL9rH9wgDQjUtDxbo8NE0F6SFvydeu1VhZe7hZuHsB2/pw==
+
+win32-api@^9.6.0:
+  version "9.6.0"
+  resolved "https://registry.yarnpkg.com/win32-api/-/win32-api-9.6.0.tgz#d9008d903c4231306f6c5d1843c0d00ddd0447b2"
+  integrity sha512-TN8Tu4qSecavCk5IctcIzDGm9agrmwcS1ieapv7HZmKkJJKXaY0FtPwV1/h1j5Cvt0LBDacaacBqjPk3nigz0g==
+  dependencies:
+    "@types/ffi-napi" "*"
+    "@types/ref-napi" "^1.4.0"
+    "@types/ref-union-di" "^1.0.0"
+    ffi-napi "^3.0.0"
+    ref-napi "^2.0.0"
+    ref-union-di "^1.0.1"
+    win32-def "^9.4.0"
+
+win32-def@^9.4.0:
+  version "9.4.0"
+  resolved "https://registry.yarnpkg.com/win32-def/-/win32-def-9.4.0.tgz#b745b369ff31a905b6c470c010f7b3ffc4dd9ed8"
+  integrity sha512-jYXv/guKqMPFv0I+3iazkF67lFzODvsmUaZLIIxzHQ057tHls9da5RDeYLQEk+8uPxr+U3f9fi/GNbk0TPD23A==
+  dependencies:
+    "@waiting/shared-types" "3"
 
 windows-release@^3.1.0:
   version "3.3.3"
