@@ -8,6 +8,7 @@ module.exports = {
   extends: ['airbnb-typescript', 'prettier/@typescript-eslint', 'prettier'],
   rules: {
     'prefer-destructuring': 'off',
+    'no-bitwise': 'off',
     'no-continue': 'off',
     'no-plusplus': 'off',
     'import/prefer-default-export': 'off',
@@ -32,6 +33,7 @@ module.exports = {
     '@typescript-eslint/comma-dangle': [
       'error',
       {
+        enums: 'only-multiline',
         arrays: 'only-multiline',
         objects: 'only-multiline',
         imports: 'only-multiline',
