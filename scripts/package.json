@@ -1,0 +1,21 @@
+{
+  "name": "@local/scripts",
+  "private": true,
+  "version": "1.0.0",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/find-up": "^4.0.0"
+  },
+  "dependencies": {
+    "node-gyp": "^7.1.2",
+    "resolve-bin": "^0.4.0",
+    "comment-json": "^4.1.0",
+    "deep-equal": "^2.0.5",
+    "find-up": "^5.0.0",
+    "normalize-path": "^3.0.0",
+    "rfdc": "^1.2.0",
+    "yargs": "^16.2.0"
+  }
+}

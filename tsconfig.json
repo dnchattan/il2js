@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "composite": true
+  },
+  "exclude": [
+    "**/*"
+  ],
+  "references": [
+    {
+      "path": "packages/core/tsconfig.json"
+    }
+  ]
+}
