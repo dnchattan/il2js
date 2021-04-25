@@ -12,13 +12,13 @@
       "packages/*"
     ]
   },
-  "resolutions": {
-    "**/ref-napi": "^3.0.1"
-  },
   "dependencies": {
     "chalk": "^4.1.0"
   },
   "devDependencies": {
+    "ref-napi": "^3.0.1",
+    "win32-api": "^9.6.0",
+    "win32-def": "^9.4.0",
     "@babel/core": "^7.12.16",
     "@babel/plugin-transform-modules-commonjs": "^7.12.13",
     "@babel/preset-env": "^7.12.16",
