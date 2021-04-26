@@ -14,13 +14,14 @@
         "--config",
         "${workspaceFolder}/jest.config.js"
       ],
+      "sourceMaps": true,
       "skipFiles": [
         "<node_internals>/**"
       ],
       "console": "integratedTerminal",
       "outFiles": [
-        "${workspaceFolder}/packages/codegen/lib",
-        "${workspaceFolder}/packages/core/lib",
+        // "${workspaceFolder}/packages/codegen/lib",
+        // "${workspaceFolder}/packages/core/lib",
       ],
       "internalConsoleOptions": "neverOpen"
     },
