@@ -1,26 +1,32 @@
 /* eslint-disable no-param-reassign */
 import ts from 'typescript';
 import path from 'path';
-import fs from 'fs';
 import { assert } from '@il2js/core';
 import { Il2JsonFile, Il2CppTypeDefinitionInfo } from '../../Types';
 import { TargetOptions } from '../TargetOptions';
 import { Target } from '../Target';
 import { generateFileAsync } from './GeneratorMethods';
 import { TargetOutputOptions } from '../TargetOutputOptions';
+import { TypeRegistry } from './TypeRegistry';
+import { CodegenApi } from '../CodegenApi';
 
-export class TsCodeGen implements Target {
-  static targetName = 'typescript';
+export class TsTarget implements Target {
+  static targetName: 'typescript' = 'typescript';
   private nodes?: ts.Node[];
 
-  constructor(private assembly: string, private version: string) {}
+  constructor(
+    private readonly assembly: string,
+    private readonly version: string,
+    private readonly types: TypeRegistry,
+    private readonly api: CodegenApi
+  ) {}
 
   async process(
     il2js: Il2JsonFile,
     opts: TargetOptions,
     progressCallback?: (n: number, m: number, label: string, item?: Il2CppTypeDefinitionInfo) => void
   ): Promise<void> {
-    this.nodes = await generateFileAsync(il2js, this.assembly, this.version, opts, progressCallback);
+    this.nodes = await generateFileAsync(il2js, this.assembly, this.version, this.types, opts, progressCallback);
   }
 
   async write(options: TargetOutputOptions): Promise<void> {
@@ -33,6 +39,6 @@ export class TsCodeGen implements Target {
     const output = this.nodes.map((node) => printer.printNode(ts.EmitHint.Unspecified, node, indexFile)).join('\n');
 
     const targetFile = path.join(options.outputDir, options.entry);
-    await fs.promises.writeFile(targetFile, output, 'utf8');
+    await this.api.writeFile(targetFile, output);
   }
 }

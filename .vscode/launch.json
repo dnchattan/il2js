@@ -4,7 +4,7 @@
       "type": "node",
       "request": "launch",
       "name": "Debug Jest Tests",
-      "cwd": "${workspaceFolder}/packages/core",
+      "cwd": "${workspaceFolder}",
       "args": [
         // "--inspect-brk",
         "${workspaceRoot}/node_modules/jest/bin/jest.js",
@@ -12,13 +12,14 @@
         "--setupFilesAfterEnv",
         "${workspaceFolder}/scripts/jest-debug-setup.js",
         "--config",
-        "${workspaceFolder}/packages/core/jest.config.js"
+        "${workspaceFolder}/jest.config.js"
       ],
       "skipFiles": [
         "<node_internals>/**"
       ],
       "console": "integratedTerminal",
       "outFiles": [
+        "${workspaceFolder}/packages/codegen/lib",
         "${workspaceFolder}/packages/core/lib",
       ],
       "internalConsoleOptions": "neverOpen"

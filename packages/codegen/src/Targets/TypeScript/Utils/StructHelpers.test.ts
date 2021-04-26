@@ -1,6 +1,7 @@
 import { printTsNode, fakeContext } from '../Test';
 import { mockIl2CppTypeDefinitionInfo, mockIl2CppTypeInfo } from '../../../Types';
 import { generateClass } from './StructHelpers';
+import { TypeRegistry } from '../TypeRegistry';
 
 describe('TsGen', () => {
   describe('class', () => {
@@ -118,6 +119,7 @@ describe('TsGen', () => {
           rootNamespace: '',
           typeMap: new Map([['System.CString', mockIl2CppTypeInfo({ TypeName: 'CString', Namespace: 'System' })]]),
           typeFunctions: {},
+          types: new TypeRegistry(),
         }
       );
       expect(printTsNode(result)).toMatchInlineSnapshot(`

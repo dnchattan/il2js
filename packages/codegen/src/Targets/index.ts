@@ -1,6 +1,7 @@
-import { TsCodeGen } from './TypeScript';
+import { TsTarget } from './TypeScript';
 
+export * from './CodegenApi';
 export * from './TargetOptions';
 export * from './Target';
 
-export const Targets = [TsCodeGen];
+export const Targets = { TsTarget };

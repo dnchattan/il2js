@@ -1,6 +1,8 @@
 import { Il2CppTypeDefinitionInfo, Il2JsonFile } from '../Types';
+import { CodegenApi } from './CodegenApi';
 import { TargetOptions } from './TargetOptions';
 import { TargetOutputOptions } from './TargetOutputOptions';
+import { TypeRegistry } from './TypeScript/TypeRegistry';
 
 export interface Target {
   process(
@@ -13,5 +15,5 @@ export interface Target {
 
 export interface TargetFactory {
   targetName: string;
-  new (assembly: string, version: string): Target;
+  new (assembly: string, version: string, types: TypeRegistry, api: CodegenApi): Target;
 }

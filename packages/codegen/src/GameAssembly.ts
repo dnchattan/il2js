@@ -6,6 +6,7 @@ import fetchGithubRelease from '@terascope/fetch-github-release';
 import { stderr } from 'chalk';
 import md5 from 'md5';
 import { Il2JsonFile } from './Types';
+import { IGameAssembly } from './IGameAssembly';
 
 const findNodeModules: (opts?: { cwd?: string; relative?: boolean }) => string[] = require('find-node-modules');
 
@@ -34,13 +35,14 @@ async function getIl2CppDumperExePath() {
   return il2CppDumperExePath;
 }
 
-export class GameAssembly {
+export class GameAssembly implements IGameAssembly {
   public structs!: Il2JsonFile;
   public cached: boolean = false;
 
   constructor(
-    private readonly gameAssemblyDllPath: string,
-    private readonly globalMetadataPath: string,
+    readonly gameAssemblyDllPath: string,
+    readonly globalMetadataPath: string,
+    readonly version: string,
     private readonly outDir: string
   ) {}
 

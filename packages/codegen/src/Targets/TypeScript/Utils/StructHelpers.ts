@@ -1,8 +1,7 @@
 /* eslint-disable no-param-reassign */
 import ts, { factory } from 'typescript';
-import * as il2jslib from '@il2js/core';
-import { NativeType } from '@il2js/core';
-import { Il2CppTypeDefinitionInfo, Il2CppTypeInfo } from '../../../Types';
+import type { NativeType } from '@il2js/core';
+import type { Il2CppTypeDefinitionInfo, Il2CppTypeInfo } from '../../../Types';
 import { BuiltinTypes } from './Constants';
 // eslint-disable-next-line import/no-cycle
 import { generateClassData } from './MemberHelpers';
@@ -11,16 +10,7 @@ import { getQualifiedTypeName } from './TypeNameHelpers';
 import { TsGenContext } from '../TsGenContext';
 
 export function findKnownType(type: Il2CppTypeInfo, context: TsGenContext): NativeType | undefined {
-  const namePath = getQualifiedTypeName(type, context).split('.');
-  let node: any = il2jslib;
-  while (namePath.length > 0) {
-    const [currentNodeName] = namePath.splice(0, 1);
-    if (!node[currentNodeName]) {
-      return undefined;
-    }
-    node = node[currentNodeName];
-  }
-  return node;
+  return context.types.findType(type);
 }
 
 export function isTypeUsable(type: Il2CppTypeInfo, context: TsGenContext): boolean {
@@ -52,6 +42,7 @@ export function fixupType(typeDef: Il2CppTypeInfo): Il2CppTypeInfo {
 }
 
 export function trimType(typeDef: Il2CppTypeInfo, context: TsGenContext): Il2CppTypeInfo {
+  typeDef.IsGenerated = true;
   if (typeDef.BaseType && !isTypeUsable(typeDef.BaseType, context)) {
     typeDef.BaseType = undefined;
   }
