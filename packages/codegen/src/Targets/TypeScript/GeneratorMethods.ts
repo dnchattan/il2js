@@ -50,12 +50,16 @@ async function generateFlatCode(
   let n = 10;
   for (const typeDef of orderedTypes) {
     progressCallback?.(n++, types.length + 10, typeDef.Type.TypeName, typeDef);
+    const block = generateClass(typeDef, context);
+    if (!block) {
+      continue;
+    }
     result.push(
       factory.createModuleDeclaration(
         undefined,
         [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
         factory.createIdentifier([context.rootNamespace, typeDef.Type.Namespace].filter(Boolean).join('.')),
-        factory.createModuleBlock([generateClass(typeDef, context)]),
+        factory.createModuleBlock([block]),
         ts.NodeFlags.Namespace
       )
     );
@@ -148,6 +152,7 @@ export async function generateFileAsync(
     typeMap: new Map(),
     typeFunctions: TypeNameToStaticMethods,
     types,
+    visitors: opts?.visitors,
   };
 
   let n = 0;

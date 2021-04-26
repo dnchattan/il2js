@@ -9,7 +9,7 @@ describe('TsGen', () => {
       const result = generateClass(
         mockIl2CppTypeDefinitionInfo({ TypeName: 'SomeType', Namespace: 'Test' }),
         fakeContext
-      );
+      )!;
       expect(printTsNode(result)).toMatchInlineSnapshot(`
         "export class SomeType extends il2js.NativeStruct {
             public static [TypeName] = \\"Test.SomeType\\";
@@ -23,7 +23,7 @@ describe('TsGen', () => {
       const result = generateClass(
         mockIl2CppTypeDefinitionInfo({ TypeName: 'SomeType', Namespace: 'Test', Address: 42 }),
         fakeContext
-      );
+      )!;
       expect(printTsNode(result)).toMatchInlineSnapshot(`
         "export class SomeType extends il2js.NativeStruct {
             public static [TypeName] = \\"Test.SomeType\\";
@@ -50,7 +50,7 @@ describe('TsGen', () => {
           }
         ),
         fakeContext
-      );
+      )!;
       expect(printTsNode(result)).toMatchInlineSnapshot(`
         "export class SomeType extends il2js.NativeStruct {
             public static [TypeName] = \\"Test.SomeType\\";
@@ -76,7 +76,7 @@ describe('TsGen', () => {
           }
         ),
         fakeContext
-      );
+      )!;
       expect(printTsNode(result)).toMatchInlineSnapshot(`
         "export class SomeType extends il2js.NativeStruct {
             public static [TypeName] = \\"Test.SomeType\\";
@@ -94,7 +94,7 @@ describe('TsGen', () => {
           BaseType: mockIl2CppTypeInfo({ TypeName: 'Bar', Namespace: 'Foo' }),
         }),
         fakeContext
-      );
+      )!;
       expect(printTsNode(result)).toMatchInlineSnapshot(`
         "export class SomeType extends il2js.NativeStruct {
             public static [TypeName] = \\"Test.SomeType\\";
@@ -121,7 +121,7 @@ describe('TsGen', () => {
           typeFunctions: {},
           types: new TypeRegistry(),
         }
-      );
+      )!;
       expect(printTsNode(result)).toMatchInlineSnapshot(`
         "export class SomeType extends il2js.NativeStruct {
             public static [TypeName] = \\"Test.SomeType\\";

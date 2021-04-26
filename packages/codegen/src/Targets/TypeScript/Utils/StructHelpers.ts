@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import ts, { factory } from 'typescript';
-import type { NativeType } from '@il2js/core';
+import { excludeUndefined, NativeType } from '@il2js/core';
 import type { Il2CppTypeDefinitionInfo, Il2CppTypeInfo } from '../../../Types';
 import { BuiltinTypes } from './Constants';
 // eslint-disable-next-line import/no-cycle
@@ -41,42 +41,63 @@ export function fixupType(typeDef: Il2CppTypeInfo): Il2CppTypeInfo {
   return typeDef;
 }
 
-export function trimType(typeDef: Il2CppTypeInfo, context: TsGenContext): Il2CppTypeInfo {
-  typeDef.IsGenerated = true;
-  if (typeDef.BaseType && !isTypeUsable(typeDef.BaseType, context)) {
-    typeDef.BaseType = undefined;
+export function visitType(typeDef: Il2CppTypeInfo, context: TsGenContext): Il2CppTypeInfo | undefined {
+  let result: Il2CppTypeInfo | undefined = typeDef;
+  if (context.visitors?.typeRef) {
+    result = context.visitors.typeRef(result, context);
   }
-  if (typeDef.DeclaringType && !isTypeUsable(typeDef.DeclaringType, context)) {
-    typeDef.DeclaringType = undefined;
+  if (!result) return undefined;
+  result.IsGenerated = true;
+  if (result.BaseType && !isTypeUsable(result.BaseType, context)) {
+    result.BaseType = undefined;
   }
-  if (typeDef.TypeArguments) {
-    typeDef.TypeArguments = typeDef.TypeArguments.map((typeArg) => fixupType(typeArg));
+  if (result.DeclaringType && !isTypeUsable(result.DeclaringType, context)) {
+    result.DeclaringType = undefined;
   }
-  return fixupType(typeDef);
+  if (result.TypeArguments) {
+    result.TypeArguments = result.TypeArguments.map((typeArg) => fixupType(typeArg));
+  }
+  return fixupType(result);
 }
 
-export function trimClass(typeDef: Il2CppTypeDefinitionInfo, context: TsGenContext): Il2CppTypeDefinitionInfo {
-  typeDef.Type = trimType(typeDef.Type, context);
-  if (typeDef.Fields) {
-    for (const field of typeDef.Fields) {
+export function visitClass(
+  typeDef: Il2CppTypeDefinitionInfo,
+  context: TsGenContext
+): Il2CppTypeDefinitionInfo | undefined {
+  let result: Il2CppTypeDefinitionInfo | undefined = typeDef;
+  if (context.visitors?.class) {
+    result = context.visitors.class(result, context);
+  }
+  if (!result) return undefined;
+  const type = visitType(result.Type, context);
+  if (!type) return undefined;
+  result.Type = type;
+  if (result.Fields) {
+    for (const field of result.Fields) {
       field.Type = fixupType(field.Type);
     }
-    typeDef.Fields = typeDef.Fields.filter((field) => isTypeUsable(field.Type, context));
+    result.Fields = result.Fields.filter((field) => isTypeUsable(field.Type, context));
   }
-  if (typeDef.StaticFields) {
-    for (const field of typeDef.StaticFields) {
+  if (result.StaticFields) {
+    for (const field of result.StaticFields) {
       field.Type = fixupType(field.Type);
     }
-    typeDef.StaticFields = typeDef.StaticFields.filter((field) => isTypeUsable(field.Type, context));
+    result.StaticFields = result.StaticFields.filter((field) => isTypeUsable(field.Type, context));
   }
-  if (typeDef.NestedTypes) {
-    typeDef.NestedTypes = typeDef.NestedTypes.map((type) => trimClass(type, context));
+  if (result.NestedTypes) {
+    result.NestedTypes = excludeUndefined(result.NestedTypes.map((nestedType) => visitClass(nestedType, context)));
   }
-  return typeDef;
+  return result;
 }
 
-export function generateClass(typeDef: Il2CppTypeDefinitionInfo, context: TsGenContext): ts.ClassDeclaration {
-  typeDef = context ? trimClass(typeDef, context) : typeDef;
+export function generateClass(
+  typeDef: Il2CppTypeDefinitionInfo,
+  context: TsGenContext
+): ts.ClassDeclaration | undefined {
+  const def = context ? visitClass(typeDef, context) : typeDef;
+  if (!def) {
+    return undefined;
+  }
   const { className, typeParameters, heritage, members } = generateClassData(typeDef, context);
 
   const classDecl = factory.createClassDeclaration(
