@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "postinstall": "node ./scripts/post-install.js",
-    "build": "lerna run build --stream",
-    "ci": "lerna run ci --stream"
+    "build": "tsc --build",
+    "ci": "tsc --build && jest"
   },
   "workspaces": {
     "packages": [
