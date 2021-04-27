@@ -33,7 +33,7 @@ export function getQualifiedTypeName(
     `Not expected to have both a namespace ('${typeDef.Namespace}' AND a declaring type ('${typeDef.DeclaringType?.Namespace}.${typeDef.DeclaringType?.TypeName}'))`
   );
   const ns = [
-    typeDef.IsGenerated ? context.rootNamespace : undefined,
+    context.rootNamespace,
     typeDef.DeclaringType?.Namespace,
     typeDef.DeclaringType?.TypeName,
     typeDef.Namespace,

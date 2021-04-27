@@ -204,7 +204,6 @@ describe('codegen', () => {
               },
               typeRef(type) {
                 if (type.TypeName === 'Bar' && type.Namespace === 'Test') {
-                  delete type.IsGenerated;
                   type.Namespace = 'Injected';
                 }
                 return type;
