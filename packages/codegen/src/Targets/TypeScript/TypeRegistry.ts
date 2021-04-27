@@ -1,5 +1,5 @@
-import { assert, NativeType } from '@il2js/core';
-import { isNativeType } from '@il2js/core/src/TypeHelpers';
+import { assert, NativeType, isNativeType } from '@il2js/core';
+
 import { Il2CppTypeInfo } from '../../Types';
 import { fixName } from './Utils/TypeNameHelpers';
 
