@@ -19,10 +19,6 @@
         "<node_internals>/**"
       ],
       "console": "integratedTerminal",
-      "outFiles": [
-        "${workspaceFolder}/packages/codegen/lib",
-        "${workspaceFolder}/packages/core/lib",
-      ],
       "internalConsoleOptions": "neverOpen"
     },
   ]

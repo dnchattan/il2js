@@ -128,10 +128,10 @@ describe('codegen', () => {
       export namespace codegen.Test {
           export class Foo extends il2js.NativeStruct {
               public static [TypeName] = \\"codegen.Test.Foo\\";
-              static get size() { return 8 + il2js.NativeStruct.sizeof(Custom.Namespace.CustomType); }
+              static get size() { return 8 + il2js.NativeStruct.sizeof(codegen.Custom.Namespace.CustomType); }
               public static fieldNames: string[] = [\\"value\\"];
-              public get value(): Custom.Namespace.CustomType {
-                  return this.readField(8, Custom.Namespace.CustomType, 1);
+              public get value(): codegen.Custom.Namespace.CustomType {
+                  return this.readField(8, codegen.Custom.Namespace.CustomType, 1);
               }
               public static staticMethods = {};
           }
@@ -228,10 +228,10 @@ describe('codegen', () => {
       export namespace codegen.Test {
           export class Foo extends il2js.NativeStruct {
               public static [TypeName] = \\"codegen.Test.Foo\\";
-              static get size() { return 8 + il2js.NativeStruct.sizeof(Bar); }
+              static get size() { return 8 + il2js.NativeStruct.sizeof(Injected.Bar); }
               public static fieldNames: string[] = [\\"value\\"];
-              public get value(): Bar {
-                  return this.readField(8, Bar, 1);
+              public get value(): Injected.Bar {
+                  return this.readField(8, Injected.Bar, 1);
               }
               public static staticMethods = {};
           }

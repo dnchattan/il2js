@@ -43,11 +43,11 @@ export function fixupType(typeDef: Il2CppTypeInfo): Il2CppTypeInfo {
 
 export function visitType(typeDef: Il2CppTypeInfo, context: TsGenContext): Il2CppTypeInfo | undefined {
   let result: Il2CppTypeInfo | undefined = typeDef;
+  result.IsGenerated = true;
   if (context.visitors?.typeRef) {
     result = context.visitors.typeRef(result, context);
   }
   if (!result) return undefined;
-  result.IsGenerated = true;
   if (result.BaseType && !isTypeUsable(result.BaseType, context)) {
     result.BaseType = undefined;
   }
@@ -73,16 +73,25 @@ export function visitClass(
   if (!type) return undefined;
   result.Type = type;
   if (result.Fields) {
-    for (const field of result.Fields) {
-      field.Type = fixupType(field.Type);
-    }
-    result.Fields = result.Fields.filter((field) => isTypeUsable(field.Type, context));
+    // MODIFY and filter:
+    result.Fields = result.Fields.filter((field) => {
+      const fieldType = visitType(field.Type, context);
+      if (!fieldType) {
+        return false;
+      }
+      field.Type = fieldType;
+      return isTypeUsable(field.Type, context);
+    });
   }
   if (result.StaticFields) {
-    for (const field of result.StaticFields) {
-      field.Type = fixupType(field.Type);
-    }
-    result.StaticFields = result.StaticFields.filter((field) => isTypeUsable(field.Type, context));
+    result.StaticFields = result.StaticFields.filter((field) => {
+      const fieldType = visitType(field.Type, context);
+      if (!fieldType) {
+        return false;
+      }
+      field.Type = fieldType;
+      return isTypeUsable(field.Type, context);
+    });
   }
   if (result.NestedTypes) {
     result.NestedTypes = excludeUndefined(result.NestedTypes.map((nestedType) => visitClass(nestedType, context)));
