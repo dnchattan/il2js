@@ -1,4 +1,4 @@
-import * as types from './NativeType';
+import * as types from './NativeTypes';
 
 export * from './Address';
 export * from './BindTypeArgs';
