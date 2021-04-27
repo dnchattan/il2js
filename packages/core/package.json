@@ -1,6 +1,6 @@
 {
   "name": "@il2js/core",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "il2js common implementation",
   "main": "lib/index.js",
   "author": "dnchattan@gmail.com",
