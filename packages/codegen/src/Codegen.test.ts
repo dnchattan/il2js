@@ -49,7 +49,7 @@ describe('codegen', () => {
     expect(writeFile.mock.calls[0]).toMatchInlineSnapshot(`
       Array [
         "out\\\\index.ts",
-        "import { Address, TypeName, bindTypeArgs } from \\"@il2js/core\\";
+        "import { Address, TypeName, bindTypeArgs, il2js, System } from \\"@il2js/core\\";
       export const GameAssemblyInfo = {
           assemblyName: \\"TestGameAssembly.dll\\",
           version: \\"123\\"
@@ -119,7 +119,7 @@ describe('codegen', () => {
     expect(writeFile.mock.calls[0]).toMatchInlineSnapshot(`
       Array [
         "out\\\\index.ts",
-        "import { Address, TypeName, bindTypeArgs } from \\"@il2js/core\\";
+        "import { Address, TypeName, bindTypeArgs, il2js, System } from \\"@il2js/core\\";
       import { Custom } from \\"./customTypes\\";
       export const GameAssemblyInfo = {
           assemblyName: \\"TestGameAssembly.dll\\",
@@ -219,7 +219,7 @@ describe('codegen', () => {
     expect(writeFile.mock.calls[0]).toMatchInlineSnapshot(`
       Array [
         "out\\\\index.ts",
-        "import { Address, TypeName, bindTypeArgs } from \\"@il2js/core\\";
+        "import { Address, TypeName, bindTypeArgs, il2js, System } from \\"@il2js/core\\";
       import { Injected } from \\"./customTypes\\";
       export const GameAssemblyInfo = {
           assemblyName: \\"TestGameAssembly.dll\\",
