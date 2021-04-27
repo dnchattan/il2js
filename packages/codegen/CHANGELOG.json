@@ -2,6 +2,21 @@
   "name": "@il2js/codegen",
   "entries": [
     {
+      "date": "Tue, 27 Apr 2021 20:52:36 GMT",
+      "tag": "@il2js/codegen_v0.2.6",
+      "version": "0.2.6",
+      "comments": {
+        "patch": [
+          {
+            "comment": "re-add il2js, System to default imports from @il2js/core",
+            "author": "dnchattan@gmail.com",
+            "commit": "34444b95c573752b1204ae822ccadd40e6f17053",
+            "package": "@il2js/codegen"
+          }
+        ]
+      }
+    },
+    {
       "date": "Tue, 27 Apr 2021 20:44:39 GMT",
       "tag": "@il2js/codegen_v0.2.5",
       "version": "0.2.5",
