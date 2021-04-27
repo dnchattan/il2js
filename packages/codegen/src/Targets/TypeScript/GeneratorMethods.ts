@@ -177,11 +177,10 @@ export async function generateFileAsync(
     }
   }
 
-  // const exportedTypes = await generateCodeGroupedByNamespace(filteredTypes, context, progressCallback);
   const exportedTypes = await generateFlatCode(typesList, context, progressCallback);
 
   const imports = new DefaultedMap<string, string[]>(() => []);
-  imports.get('@il2js/core').push('Address', 'TypeName', 'bindTypeArgs');
+  imports.get('@il2js/core').push('Address', 'TypeName', 'bindTypeArgs', 'il2js', 'System');
   for (const [names, from] of context.types.imports) {
     imports.get(from).push(...names);
   }
