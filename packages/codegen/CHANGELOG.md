@@ -1,8 +1,16 @@
 # Change Log - @il2js/codegen
 
-This log was last generated on Tue, 27 Apr 2021 20:52:36 GMT and should not be manually modified.
+This log was last generated on Tue, 27 Apr 2021 21:27:56 GMT and should not be manually modified.
 
 <!-- Start content -->
+
+## 0.2.7
+
+Tue, 27 Apr 2021 21:27:56 GMT
+
+### Patches
+
+- Bump @il2js/core to v0.1.6 (dnchattan@gmail.com)
 
 ## 0.2.6
 
