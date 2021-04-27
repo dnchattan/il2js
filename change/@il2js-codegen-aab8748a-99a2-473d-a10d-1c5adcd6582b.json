@@ -1,0 +1,7 @@
+{
+  "type": "patch",
+  "comment": "re-add il2js, System to default imports from @il2js/core",
+  "packageName": "@il2js/codegen",
+  "email": "dnchattan@gmail.com",
+  "dependentChangeType": "patch"
+}
