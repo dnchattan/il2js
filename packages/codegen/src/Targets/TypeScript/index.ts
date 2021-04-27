@@ -1,1 +1,1 @@
-export * from './TsCodeGen';
+export * from './TsTarget';

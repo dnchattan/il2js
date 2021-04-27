@@ -1,6 +1,7 @@
 import { printTsNode, fakeContext } from '../Test';
 import { mockIl2CppTypeDefinitionInfo, mockIl2CppTypeInfo } from '../../../Types';
 import { generateClass } from './StructHelpers';
+import { TypeRegistry } from '../TypeRegistry';
 
 describe('TsGen', () => {
   describe('class', () => {
@@ -8,7 +9,7 @@ describe('TsGen', () => {
       const result = generateClass(
         mockIl2CppTypeDefinitionInfo({ TypeName: 'SomeType', Namespace: 'Test' }),
         fakeContext
-      );
+      )!;
       expect(printTsNode(result)).toMatchInlineSnapshot(`
         "export class SomeType extends il2js.NativeStruct {
             public static [TypeName] = \\"Test.SomeType\\";
@@ -22,7 +23,7 @@ describe('TsGen', () => {
       const result = generateClass(
         mockIl2CppTypeDefinitionInfo({ TypeName: 'SomeType', Namespace: 'Test', Address: 42 }),
         fakeContext
-      );
+      )!;
       expect(printTsNode(result)).toMatchInlineSnapshot(`
         "export class SomeType extends il2js.NativeStruct {
             public static [TypeName] = \\"Test.SomeType\\";
@@ -49,7 +50,7 @@ describe('TsGen', () => {
           }
         ),
         fakeContext
-      );
+      )!;
       expect(printTsNode(result)).toMatchInlineSnapshot(`
         "export class SomeType extends il2js.NativeStruct {
             public static [TypeName] = \\"Test.SomeType\\";
@@ -75,7 +76,7 @@ describe('TsGen', () => {
           }
         ),
         fakeContext
-      );
+      )!;
       expect(printTsNode(result)).toMatchInlineSnapshot(`
         "export class SomeType extends il2js.NativeStruct {
             public static [TypeName] = \\"Test.SomeType\\";
@@ -93,7 +94,7 @@ describe('TsGen', () => {
           BaseType: mockIl2CppTypeInfo({ TypeName: 'Bar', Namespace: 'Foo' }),
         }),
         fakeContext
-      );
+      )!;
       expect(printTsNode(result)).toMatchInlineSnapshot(`
         "export class SomeType extends il2js.NativeStruct {
             public static [TypeName] = \\"Test.SomeType\\";
@@ -118,8 +119,9 @@ describe('TsGen', () => {
           rootNamespace: '',
           typeMap: new Map([['System.CString', mockIl2CppTypeInfo({ TypeName: 'CString', Namespace: 'System' })]]),
           typeFunctions: {},
+          types: new TypeRegistry(),
         }
-      );
+      )!;
       expect(printTsNode(result)).toMatchInlineSnapshot(`
         "export class SomeType extends il2js.NativeStruct {
             public static [TypeName] = \\"Test.SomeType\\";

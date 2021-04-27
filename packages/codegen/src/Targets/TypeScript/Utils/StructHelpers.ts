@@ -1,8 +1,7 @@
 /* eslint-disable no-param-reassign */
 import ts, { factory } from 'typescript';
-import * as il2jslib from '@il2js/core';
-import { NativeType } from '@il2js/core';
-import { Il2CppTypeDefinitionInfo, Il2CppTypeInfo } from '../../../Types';
+import { excludeUndefined, NativeType } from '@il2js/core';
+import type { Il2CppTypeDefinitionInfo, Il2CppTypeInfo } from '../../../Types';
 import { BuiltinTypes } from './Constants';
 // eslint-disable-next-line import/no-cycle
 import { generateClassData } from './MemberHelpers';
@@ -11,16 +10,7 @@ import { getQualifiedTypeName } from './TypeNameHelpers';
 import { TsGenContext } from '../TsGenContext';
 
 export function findKnownType(type: Il2CppTypeInfo, context: TsGenContext): NativeType | undefined {
-  const namePath = getQualifiedTypeName(type, context).split('.');
-  let node: any = il2jslib;
-  while (namePath.length > 0) {
-    const [currentNodeName] = namePath.splice(0, 1);
-    if (!node[currentNodeName]) {
-      return undefined;
-    }
-    node = node[currentNodeName];
-  }
-  return node;
+  return context.types.findType(type);
 }
 
 export function isTypeUsable(type: Il2CppTypeInfo, context: TsGenContext): boolean {
@@ -51,41 +41,72 @@ export function fixupType(typeDef: Il2CppTypeInfo): Il2CppTypeInfo {
   return typeDef;
 }
 
-export function trimType(typeDef: Il2CppTypeInfo, context: TsGenContext): Il2CppTypeInfo {
-  if (typeDef.BaseType && !isTypeUsable(typeDef.BaseType, context)) {
-    typeDef.BaseType = undefined;
+export function visitType(typeDef: Il2CppTypeInfo, context: TsGenContext): Il2CppTypeInfo | undefined {
+  let result: Il2CppTypeInfo | undefined = typeDef;
+  result.IsGenerated = true;
+  if (context.visitors?.typeRef) {
+    result = context.visitors.typeRef(result, context);
   }
-  if (typeDef.DeclaringType && !isTypeUsable(typeDef.DeclaringType, context)) {
-    typeDef.DeclaringType = undefined;
+  if (!result) return undefined;
+  if (result.BaseType && !isTypeUsable(result.BaseType, context)) {
+    result.BaseType = undefined;
   }
-  if (typeDef.TypeArguments) {
-    typeDef.TypeArguments = typeDef.TypeArguments.map((typeArg) => fixupType(typeArg));
+  if (result.DeclaringType && !isTypeUsable(result.DeclaringType, context)) {
+    result.DeclaringType = undefined;
   }
-  return fixupType(typeDef);
+  if (result.TypeArguments) {
+    result.TypeArguments = result.TypeArguments.map((typeArg) => fixupType(typeArg));
+  }
+  return fixupType(result);
 }
 
-export function trimClass(typeDef: Il2CppTypeDefinitionInfo, context: TsGenContext): Il2CppTypeDefinitionInfo {
-  typeDef.Type = trimType(typeDef.Type, context);
-  if (typeDef.Fields) {
-    for (const field of typeDef.Fields) {
-      field.Type = fixupType(field.Type);
-    }
-    typeDef.Fields = typeDef.Fields.filter((field) => isTypeUsable(field.Type, context));
+export function visitClass(
+  typeDef: Il2CppTypeDefinitionInfo,
+  context: TsGenContext
+): Il2CppTypeDefinitionInfo | undefined {
+  let result: Il2CppTypeDefinitionInfo | undefined = typeDef;
+  if (context.visitors?.class) {
+    result = context.visitors.class(result, context);
   }
-  if (typeDef.StaticFields) {
-    for (const field of typeDef.StaticFields) {
-      field.Type = fixupType(field.Type);
-    }
-    typeDef.StaticFields = typeDef.StaticFields.filter((field) => isTypeUsable(field.Type, context));
+  if (!result) return undefined;
+  const type = visitType(result.Type, context);
+  if (!type) return undefined;
+  result.Type = type;
+  if (result.Fields) {
+    // MODIFY and filter:
+    result.Fields = result.Fields.filter((field) => {
+      const fieldType = visitType(field.Type, context);
+      if (!fieldType) {
+        return false;
+      }
+      field.Type = fieldType;
+      return isTypeUsable(field.Type, context);
+    });
   }
-  if (typeDef.NestedTypes) {
-    typeDef.NestedTypes = typeDef.NestedTypes.map((type) => trimClass(type, context));
+  if (result.StaticFields) {
+    result.StaticFields = result.StaticFields.filter((field) => {
+      const fieldType = visitType(field.Type, context);
+      if (!fieldType) {
+        return false;
+      }
+      field.Type = fieldType;
+      return isTypeUsable(field.Type, context);
+    });
   }
-  return typeDef;
+  if (result.NestedTypes) {
+    result.NestedTypes = excludeUndefined(result.NestedTypes.map((nestedType) => visitClass(nestedType, context)));
+  }
+  return result;
 }
 
-export function generateClass(typeDef: Il2CppTypeDefinitionInfo, context: TsGenContext): ts.ClassDeclaration {
-  typeDef = context ? trimClass(typeDef, context) : typeDef;
+export function generateClass(
+  typeDef: Il2CppTypeDefinitionInfo,
+  context: TsGenContext
+): ts.ClassDeclaration | undefined {
+  const def = context ? visitClass(typeDef, context) : typeDef;
+  if (!def) {
+    return undefined;
+  }
   const { className, typeParameters, heritage, members } = generateClassData(typeDef, context);
 
   const classDecl = factory.createClassDeclaration(

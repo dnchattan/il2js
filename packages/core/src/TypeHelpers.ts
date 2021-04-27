@@ -5,7 +5,7 @@ import { TypeName } from './FieldSymbols';
 import { PrimitiveTypes } from './PrimitiveTypes';
 import { assert } from './Helpers';
 
-export function isNativeType(type: NativeType | string | number | boolean | Type): type is NativeType {
+export function isNativeType(type: NativeType | string | number | boolean | Type | unknown): type is NativeType {
   return (type as any).name !== undefined;
 }
 

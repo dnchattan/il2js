@@ -1,11 +1,13 @@
 import ts, { factory } from 'typescript';
 import multimatch from 'multimatch';
 import toposort from 'toposort';
+import { DefaultedMap } from '@il2js/core';
 import { Il2JsonFile, Il2CppTypeDefinitionInfo, Il2CppTypeInfo } from '../../Types';
 import { TargetOptions } from '../TargetOptions';
 import { generateClass } from './Utils/StructHelpers';
 import { getQualifiedTypeName } from './Utils/TypeNameHelpers';
 import { TsGenContext } from './TsGenContext';
+import { TypeRegistry } from './TypeRegistry';
 
 export interface Namespace {
   name: string;
@@ -48,12 +50,16 @@ async function generateFlatCode(
   let n = 10;
   for (const typeDef of orderedTypes) {
     progressCallback?.(n++, types.length + 10, typeDef.Type.TypeName, typeDef);
+    const block = generateClass(typeDef, context);
+    if (!block) {
+      continue;
+    }
     result.push(
       factory.createModuleDeclaration(
         undefined,
         [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
         factory.createIdentifier([context.rootNamespace, typeDef.Type.Namespace].filter(Boolean).join('.')),
-        factory.createModuleBlock([generateClass(typeDef, context)]),
+        factory.createModuleBlock([block]),
         ts.NodeFlags.Namespace
       )
     );
@@ -135,6 +141,7 @@ export async function generateFileAsync(
   { TypeInfoList, TypeNameToStaticMethods }: Il2JsonFile,
   assembly: string,
   version: string,
+  types: TypeRegistry,
   opts?: Partial<TargetOptions>,
   progressCallback?: (n: number, m: number, label: string, item?: Il2CppTypeDefinitionInfo) => void
 ): Promise<ts.Node[]> {
@@ -144,6 +151,8 @@ export async function generateFileAsync(
     rootNamespace: options.rootNamespace,
     typeMap: new Map(),
     typeFunctions: TypeNameToStaticMethods,
+    types,
+    visitors: opts?.visitors,
   };
 
   let n = 0;
@@ -171,23 +180,32 @@ export async function generateFileAsync(
   // const exportedTypes = await generateCodeGroupedByNamespace(filteredTypes, context, progressCallback);
   const exportedTypes = await generateFlatCode(typesList, context, progressCallback);
 
-  return [
-    factory.createImportDeclaration(
-      undefined,
-      undefined,
-      factory.createImportClause(
-        false,
+  const imports = new DefaultedMap<string, string[]>(() => []);
+  imports.get('@il2js/core').push('Address', 'TypeName', 'bindTypeArgs');
+  for (const [names, from] of context.types.imports) {
+    imports.get(from).push(...names);
+  }
+
+  const importDecls: ts.ImportDeclaration[] = [];
+  for (const [from, names] of imports.entries()) {
+    importDecls.push(
+      factory.createImportDeclaration(
         undefined,
-        factory.createNamedImports([
-          factory.createImportSpecifier(undefined, factory.createIdentifier('il2js')),
-          factory.createImportSpecifier(undefined, factory.createIdentifier('System')),
-          factory.createImportSpecifier(undefined, factory.createIdentifier('Address')),
-          factory.createImportSpecifier(undefined, factory.createIdentifier('TypeName')),
-          factory.createImportSpecifier(undefined, factory.createIdentifier('bindTypeArgs')),
-        ])
-      ),
-      factory.createStringLiteral('@il2js/core')
-    ),
+        undefined,
+        factory.createImportClause(
+          false,
+          undefined,
+          factory.createNamedImports(
+            names.map((name) => factory.createImportSpecifier(undefined, factory.createIdentifier(name)))
+          )
+        ),
+        factory.createStringLiteral(from)
+      )
+    );
+  }
+
+  return [
+    ...importDecls,
     factory.createVariableStatement(
       factory.createModifiersFromModifierFlags(ts.ModifierFlags.Export),
       factory.createVariableDeclarationList(
