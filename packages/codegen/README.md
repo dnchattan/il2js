@@ -85,6 +85,7 @@ await codegen({
           // called for each type when it is used
           typeRef(type) {
             if (type.TypeName === 'Bar' && type.Namespace === 'Test') {
+              delete type.IsGenerated;
               type.Namespace = 'Injected';
             }
             return type;

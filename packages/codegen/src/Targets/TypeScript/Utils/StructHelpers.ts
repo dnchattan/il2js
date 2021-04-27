@@ -43,6 +43,7 @@ export function fixupType(typeDef: Il2CppTypeInfo): Il2CppTypeInfo {
 
 export function visitType(typeDef: Il2CppTypeInfo, context: TsGenContext): Il2CppTypeInfo | undefined {
   let result: Il2CppTypeInfo | undefined = typeDef;
+  result.IsGenerated = true;
   if (context.visitors?.typeRef) {
     result = context.visitors.typeRef(result, context);
   }

@@ -16,6 +16,7 @@ export interface Il2CppTypeInfo {
   TemplateArgumentNames?: string[];
   TypeArguments?: Il2CppTypeInfo[];
   Address?: Address;
+  IsGenerated?: true;
 }
 
 export function mockIl2CppTypeInfo(
