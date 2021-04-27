@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "postinstall": "node ./scripts/post-install.js",
+    "publish": "beachball publish",
+    "change": "beachball change",
+    "check": "beachball check",
     "build": "tsc --build",
     "ci": "tsc --build && jest"
   },
