@@ -2,6 +2,21 @@
   "name": "@il2js/codegen",
   "entries": [
     {
+      "date": "Wed, 28 Apr 2021 21:51:36 GMT",
+      "tag": "@il2js/codegen_v0.2.9",
+      "version": "0.2.9",
+      "comments": {
+        "patch": [
+          {
+            "comment": "fix type exclusion (again)",
+            "author": "dnchattan@gmail.com",
+            "commit": "6cb94ba0a6e9d887aee68ba0eab349606b843600",
+            "package": "@il2js/codegen"
+          }
+        ]
+      }
+    },
+    {
       "date": "Wed, 28 Apr 2021 20:28:42 GMT",
       "tag": "@il2js/codegen_v0.2.8",
       "version": "0.2.8",

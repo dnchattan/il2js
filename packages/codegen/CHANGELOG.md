@@ -1,8 +1,16 @@
 # Change Log - @il2js/codegen
 
-This log was last generated on Wed, 28 Apr 2021 20:28:42 GMT and should not be manually modified.
+This log was last generated on Wed, 28 Apr 2021 21:51:36 GMT and should not be manually modified.
 
 <!-- Start content -->
+
+## 0.2.9
+
+Wed, 28 Apr 2021 21:51:36 GMT
+
+### Patches
+
+- fix type exclusion (again) (dnchattan@gmail.com)
 
 ## 0.2.8
 
