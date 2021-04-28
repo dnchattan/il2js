@@ -149,7 +149,6 @@ export async function generateFileAsync(
 
   const context: TsGenContext = {
     rootNamespace: options.rootNamespace,
-    typeMap: new Map(),
     typeFunctions: TypeNameToStaticMethods,
     types,
     visitors: opts?.visitors,
@@ -167,15 +166,8 @@ export async function generateFileAsync(
 
   progressCallback?.(n++, typesList.length + 10, 'Removing empty types');
 
-  // build type map
-  for (const type of typesList) {
-    context.typeMap.set(getQualifiedTypeName(type.Type, context), type.Type);
-    if (type.NestedTypes) {
-      for (const nestedType of type.NestedTypes) {
-        context.typeMap.set(getQualifiedTypeName(nestedType.Type, context), nestedType.Type);
-      }
-    }
-  }
+  // add to type registry
+  types.addTypeDefs(typesList);
 
   const exportedTypes = await generateFlatCode(typesList, context, progressCallback);
 

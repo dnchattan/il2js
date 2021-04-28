@@ -5,6 +5,7 @@ import { Il2CppTypeInfo } from '../../../Types';
 // eslint-disable-next-line import/no-cycle
 import { findKnownType } from './StructHelpers';
 import { getTypeMapping } from '../TypeMappings';
+import { TypeDisposition } from '../TypeRegistry';
 
 const reservedNames = new Set(['name', 'size']);
 
@@ -20,8 +21,7 @@ export function fixName(name: string): string {
 export function getQualifiedTypeName(
   typeDef: Il2CppTypeInfo,
   context: TsGenContext,
-  relativeToType?: Il2CppTypeInfo,
-  includeRootNamespace: boolean = true
+  relativeToType?: Il2CppTypeInfo
 ): string {
   const relativeTo =
     relativeToType &&
@@ -33,8 +33,9 @@ export function getQualifiedTypeName(
     !(typeDef.Namespace && typeDef.DeclaringType),
     `Not expected to have both a namespace ('${typeDef.Namespace}' AND a declaring type ('${typeDef.DeclaringType?.Namespace}.${typeDef.DeclaringType?.TypeName}'))`
   );
+  const disposition = context.types.getTypeDisposition(typeDef);
   const ns = [
-    typeDef.IsGenerated && includeRootNamespace ? context.rootNamespace : undefined,
+    disposition === TypeDisposition.Generated ? context.rootNamespace : undefined,
     typeDef.DeclaringType?.Namespace,
     typeDef.DeclaringType?.TypeName,
     typeDef.Namespace,

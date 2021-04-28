@@ -20,7 +20,7 @@ describe('codegen', () => {
       structs: {
         TypeInfoList: [
           mockIl2CppTypeDefinitionInfo(
-            { TypeName: 'Bar', Namespace: 'Test' },
+            { TypeName: 'Bar', Namespace: 'Test', TypeIndex: 1 },
             {
               ImageName: 'image',
               Fields: [
@@ -33,12 +33,12 @@ describe('codegen', () => {
             }
           ),
           mockIl2CppTypeDefinitionInfo(
-            { TypeName: 'Foo', Namespace: 'Test' },
+            { TypeName: 'Foo', Namespace: 'Test', TypeIndex: 2 },
             {
               ImageName: 'image',
               Fields: [
                 {
-                  Type: mockIl2CppTypeInfo({ TypeName: 'Bar', Namespace: 'Test', Indirection: 1 }),
+                  Type: mockIl2CppTypeInfo({ TypeName: 'Bar', Namespace: 'Test', Indirection: 1, TypeIndex: 1 }),
                   Name: 'bar',
                   Offset: 0x8,
                 },
@@ -57,11 +57,12 @@ describe('codegen', () => {
       },
       targets: [['typescript', { rootNamespace: 'codegen' }]],
       api: { writeFile },
+      types: [],
     });
     expect(writeFile.mock.calls[0]).toMatchInlineSnapshot(`
       Array [
         "out\\\\index.ts",
-        "import { Address, TypeName, bindTypeArgs, System, il2js } from \\"@il2js/core\\";
+        "import { Address, TypeName, bindTypeArgs } from \\"@il2js/core\\";
       export const GameAssemblyInfo = {
           assemblyName: \\"TestGameAssembly.dll\\",
           version: \\"123\\"
@@ -151,10 +152,10 @@ describe('codegen', () => {
       export namespace codegen.Test {
           export class Foo extends il2js.NativeStruct {
               public static [TypeName] = \\"codegen.Test.Foo\\";
-              static get size() { return 8 + il2js.NativeStruct.sizeof(codegen.Custom.Namespace.CustomType); }
+              static get size() { return 8 + il2js.NativeStruct.sizeof(Custom.Namespace.CustomType); }
               public static fieldNames: string[] = [\\"value\\"];
-              public get value(): codegen.Custom.Namespace.CustomType {
-                  return this.readField(8, codegen.Custom.Namespace.CustomType, 1);
+              public get value(): Custom.Namespace.CustomType {
+                  return this.readField(8, Custom.Namespace.CustomType, 1);
               }
               public static staticMethods = {};
           }
@@ -227,7 +228,6 @@ describe('codegen', () => {
               },
               typeRef(type) {
                 if (type.TypeName === 'Bar' && type.Namespace === 'Test') {
-                  delete type.IsGenerated;
                   type.Namespace = 'Injected';
                 }
                 return type;

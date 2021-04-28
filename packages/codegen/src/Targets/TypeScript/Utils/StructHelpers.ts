@@ -17,8 +17,8 @@ export function isTypeUsable(type: Il2CppTypeInfo, context: TsGenContext): boole
   if (type.IsPrimitive) {
     return true;
   }
-  const name = getQualifiedTypeName(type, context, undefined, false);
-  if (!BuiltinTypes[name as keyof typeof BuiltinTypes] && !context.typeMap.has(name) && !findKnownType(type, context)) {
+  const name = getQualifiedTypeName(type, context, undefined);
+  if (!BuiltinTypes[name as keyof typeof BuiltinTypes] && !context.types.hasType(type)) {
     return false;
   }
   if (type.TypeArguments?.length) {
@@ -43,7 +43,6 @@ export function fixupType(typeDef: Il2CppTypeInfo): Il2CppTypeInfo {
 
 export function visitType(typeDef: Il2CppTypeInfo, context: TsGenContext): Il2CppTypeInfo | undefined {
   let result: Il2CppTypeInfo | undefined = typeDef;
-  result.IsGenerated = true;
   if (context.visitors?.typeRef) {
     result = context.visitors.typeRef(result, context);
   }
