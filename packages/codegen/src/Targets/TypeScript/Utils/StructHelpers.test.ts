@@ -117,7 +117,6 @@ describe('TsGen', () => {
         }),
         {
           rootNamespace: '',
-          typeMap: new Map([['System.CString', mockIl2CppTypeInfo({ TypeName: 'CString', Namespace: 'System' })]]),
           typeFunctions: {},
           types: new TypeRegistry(),
         }

@@ -1,6 +1,6 @@
-import { assert, NativeType, isNativeType } from '@il2js/core';
+import { assert, NativeType, isNativeType, excludeUndefined } from '@il2js/core';
 
-import { Il2CppTypeInfo } from '../../Types';
+import { Il2CppTypeDefinitionInfo, Il2CppTypeInfo } from '../../Types';
 import { fixName } from './Utils/TypeNameHelpers';
 
 export interface TypeImport {
@@ -28,8 +28,15 @@ function mergeTypeTree(left: TypeTree, right: Readonly<TypeTree>) {
   }
 }
 
+export enum TypeDisposition {
+  Missing,
+  Generated,
+  Imported,
+}
+
 export class TypeRegistry {
   private types: TypeTree = {};
+  private typeIds = new Set<number>();
   readonly imports: [string[], string][] = [];
 
   findType(type: Il2CppTypeInfo): NativeType | undefined {
@@ -45,6 +52,32 @@ export class TypeRegistry {
       node = node[currentNodeName];
     }
     return node;
+  }
+
+  getTypeDisposition(type: Il2CppTypeInfo): TypeDisposition {
+    if (this.typeIds.has(type.TypeIndex)) {
+      return TypeDisposition.Generated;
+    }
+    if (this.findType(type)) {
+      return TypeDisposition.Imported;
+    }
+    return TypeDisposition.Missing;
+  }
+
+  hasType(type: Il2CppTypeInfo): boolean {
+    return this.typeIds.has(type.TypeIndex) || !!this.findType(type);
+  }
+
+  addTypeDefs(types: Il2CppTypeDefinitionInfo[]) {
+    let typesToAdd: Il2CppTypeDefinitionInfo[] = types;
+    while (typesToAdd.length > 0) {
+      this.addTypeInfo(typesToAdd.map((type) => type.Type));
+      typesToAdd = excludeUndefined(typesToAdd.flatMap((type) => type.NestedTypes));
+    }
+  }
+
+  addTypeInfo(types: Il2CppTypeInfo[]) {
+    types.forEach((type) => this.typeIds.add(type.TypeIndex));
   }
 
   addTypes({ from, types }: TypeImport) {
