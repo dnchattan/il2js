@@ -5,6 +5,7 @@ import { Il2CppTypeInfo } from '../../../Types';
 // eslint-disable-next-line import/no-cycle
 import { findKnownType } from './StructHelpers';
 import { getTypeMapping } from '../TypeMappings';
+// eslint-disable-next-line import/no-cycle
 import { TypeDisposition } from '../TypeRegistry';
 
 const reservedNames = new Set(['name', 'size']);
