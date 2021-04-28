@@ -20,13 +20,26 @@ describe('codegen', () => {
       structs: {
         TypeInfoList: [
           mockIl2CppTypeDefinitionInfo(
-            { TypeName: 'Foo', Namespace: 'Test' },
+            { TypeName: 'Bar', Namespace: 'Test' },
             {
               ImageName: 'image',
               Fields: [
                 {
                   Type: mockIl2CppTypeInfo({ TypeName: 'int', Indirection: 1, IsPrimitive: true }),
                   Name: 'value',
+                  Offset: 0x8,
+                },
+              ],
+            }
+          ),
+          mockIl2CppTypeDefinitionInfo(
+            { TypeName: 'Foo', Namespace: 'Test' },
+            {
+              ImageName: 'image',
+              Fields: [
+                {
+                  Type: mockIl2CppTypeInfo({ TypeName: 'Bar', Namespace: 'Test', Indirection: 1 }),
+                  Name: 'bar',
                   Offset: 0x8,
                 },
               ],
@@ -44,23 +57,33 @@ describe('codegen', () => {
       },
       targets: [['typescript', { rootNamespace: 'codegen' }]],
       api: { writeFile },
-      types: [],
     });
     expect(writeFile.mock.calls[0]).toMatchInlineSnapshot(`
       Array [
         "out\\\\index.ts",
-        "import { Address, TypeName, bindTypeArgs, il2js, System } from \\"@il2js/core\\";
+        "import { Address, TypeName, bindTypeArgs, System, il2js } from \\"@il2js/core\\";
       export const GameAssemblyInfo = {
           assemblyName: \\"TestGameAssembly.dll\\",
           version: \\"123\\"
       };
       export namespace codegen.Test {
-          export class Foo extends il2js.NativeStruct {
-              public static [TypeName] = \\"codegen.Test.Foo\\";
+          export class Bar extends il2js.NativeStruct {
+              public static [TypeName] = \\"codegen.Test.Bar\\";
               static get size() { return 8 + il2js.NativeStruct.sizeof(\\"int\\"); }
               public static fieldNames: string[] = [\\"value\\"];
               public get value(): number {
                   return this.readTypePrimitive(8, \\"int\\", 1);
+              }
+              public static staticMethods = {};
+          }
+      }
+      export namespace codegen.Test {
+          export class Foo extends il2js.NativeStruct {
+              public static [TypeName] = \\"codegen.Test.Foo\\";
+              static get size() { return 8 + il2js.NativeStruct.sizeof(codegen.Test.Bar); }
+              public static fieldNames: string[] = [\\"bar\\"];
+              public get bar(): codegen.Test.Bar {
+                  return this.readField(8, codegen.Test.Bar, 1);
               }
               public static staticMethods = {};
           }
@@ -114,12 +137,12 @@ describe('codegen', () => {
       },
       targets: [['typescript', { rootNamespace: 'codegen' }]],
       api: { writeFile },
-      types: [{ from: './customTypes', types: { Custom: { Namespace: { CustomType } } } }],
+      types: ['@il2js/core', { from: './customTypes', types: { Custom: { Namespace: { CustomType } } } }],
     });
     expect(writeFile.mock.calls[0]).toMatchInlineSnapshot(`
       Array [
         "out\\\\index.ts",
-        "import { Address, TypeName, bindTypeArgs, il2js, System } from \\"@il2js/core\\";
+        "import { Address, TypeName, bindTypeArgs, System, il2js } from \\"@il2js/core\\";
       import { Custom } from \\"./customTypes\\";
       export const GameAssemblyInfo = {
           assemblyName: \\"TestGameAssembly.dll\\",
@@ -214,12 +237,12 @@ describe('codegen', () => {
         ],
       ],
       api: { writeFile },
-      types: [{ from: './customTypes', types: { Injected: { Bar: CustomType } } }],
+      types: ['@il2js/core', { from: './customTypes', types: { Injected: { Bar: CustomType } } }],
     });
     expect(writeFile.mock.calls[0]).toMatchInlineSnapshot(`
       Array [
         "out\\\\index.ts",
-        "import { Address, TypeName, bindTypeArgs, il2js, System } from \\"@il2js/core\\";
+        "import { Address, TypeName, bindTypeArgs, System, il2js } from \\"@il2js/core\\";
       import { Injected } from \\"./customTypes\\";
       export const GameAssemblyInfo = {
           assemblyName: \\"TestGameAssembly.dll\\",
