@@ -17,7 +17,7 @@ export function isTypeUsable(type: Il2CppTypeInfo, context: TsGenContext): boole
   if (type.IsPrimitive) {
     return true;
   }
-  const name = getQualifiedTypeName(type, context);
+  const name = getQualifiedTypeName(type, context, undefined, false);
   if (!BuiltinTypes[name as keyof typeof BuiltinTypes] && !context.typeMap.has(name) && !findKnownType(type, context)) {
     return false;
   }

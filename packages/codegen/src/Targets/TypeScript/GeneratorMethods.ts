@@ -180,7 +180,7 @@ export async function generateFileAsync(
   const exportedTypes = await generateFlatCode(typesList, context, progressCallback);
 
   const imports = new DefaultedMap<string, string[]>(() => []);
-  imports.get('@il2js/core').push('Address', 'TypeName', 'bindTypeArgs', 'il2js', 'System');
+  imports.get('@il2js/core').push('Address', 'TypeName', 'bindTypeArgs');
   for (const [names, from] of context.types.imports) {
     imports.get(from).push(...names);
   }

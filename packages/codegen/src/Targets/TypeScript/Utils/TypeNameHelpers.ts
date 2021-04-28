@@ -20,7 +20,8 @@ export function fixName(name: string): string {
 export function getQualifiedTypeName(
   typeDef: Il2CppTypeInfo,
   context: TsGenContext,
-  relativeToType?: Il2CppTypeInfo
+  relativeToType?: Il2CppTypeInfo,
+  includeRootNamespace: boolean = true
 ): string {
   const relativeTo =
     relativeToType &&
@@ -33,7 +34,7 @@ export function getQualifiedTypeName(
     `Not expected to have both a namespace ('${typeDef.Namespace}' AND a declaring type ('${typeDef.DeclaringType?.Namespace}.${typeDef.DeclaringType?.TypeName}'))`
   );
   const ns = [
-    typeDef.IsGenerated ? context.rootNamespace : undefined,
+    typeDef.IsGenerated && includeRootNamespace ? context.rootNamespace : undefined,
     typeDef.DeclaringType?.Namespace,
     typeDef.DeclaringType?.TypeName,
     typeDef.Namespace,
