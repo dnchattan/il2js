@@ -2,6 +2,21 @@
   "name": "@il2js/codegen",
   "entries": [
     {
+      "date": "Wed, 28 Apr 2021 20:28:42 GMT",
+      "tag": "@il2js/codegen_v0.2.8",
+      "version": "0.2.8",
+      "comments": {
+        "patch": [
+          {
+            "comment": "special casing in getQualifiedName to fix isTypeUsable",
+            "author": "dnchattan@gmail.com",
+            "commit": "d5056aa7cf5866368c72933f5bf49fb631217b65",
+            "package": "@il2js/codegen"
+          }
+        ]
+      }
+    },
+    {
       "date": "Tue, 27 Apr 2021 21:27:56 GMT",
       "tag": "@il2js/codegen_v0.2.7",
       "version": "0.2.7",
