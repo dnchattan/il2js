@@ -1,6 +1,6 @@
 import { printTsNode, fakeContext } from '../Test';
 import { mockIl2CppTypeInfo } from '../../../Types';
-import { generateTypeReference, getQualifiedTypeName } from './TypeNameHelpers';
+import { generateTypeReference } from './TypeNameHelpers';
 
 describe('generateTypeReference', () => {
   it('basic', () => {
@@ -12,23 +12,25 @@ describe('generateTypeReference', () => {
   });
 });
 
-describe('getQualifiedTypeName', () => {
+describe('getTypeName', () => {
   it('one{type}', () => {
-    expect(getQualifiedTypeName(mockIl2CppTypeInfo({ TypeName: 'type', Namespace: 'one' }), fakeContext)).toEqual(
-      'one.type'
-    );
+    expect(
+      fakeContext.types.getTypeName(mockIl2CppTypeInfo({ TypeName: 'type', Namespace: 'one' }), fakeContext)
+    ).toEqual('one.type');
   });
   it('two.parts{type}', () => {
-    expect(getQualifiedTypeName(mockIl2CppTypeInfo({ TypeName: 'type', Namespace: 'two.parts' }), fakeContext)).toEqual(
-      'two.parts.type'
-    );
+    expect(
+      fakeContext.types.getTypeName(mockIl2CppTypeInfo({ TypeName: 'type', Namespace: 'two.parts' }), fakeContext)
+    ).toEqual('two.parts.type');
   });
   it('""{type}', () => {
-    expect(getQualifiedTypeName(mockIl2CppTypeInfo({ TypeName: 'type', Namespace: '' }), fakeContext)).toEqual('type');
-  });
-  it('undefined{type}', () => {
-    expect(getQualifiedTypeName(mockIl2CppTypeInfo({ TypeName: 'type', Namespace: undefined }), fakeContext)).toEqual(
+    expect(fakeContext.types.getTypeName(mockIl2CppTypeInfo({ TypeName: 'type', Namespace: '' }), fakeContext)).toEqual(
       'type'
     );
+  });
+  it('undefined{type}', () => {
+    expect(
+      fakeContext.types.getTypeName(mockIl2CppTypeInfo({ TypeName: 'type', Namespace: undefined }), fakeContext)
+    ).toEqual('type');
   });
 });

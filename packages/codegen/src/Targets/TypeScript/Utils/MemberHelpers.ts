@@ -4,7 +4,7 @@ import { Il2CppTypeDefinitionInfo, Il2CppTypeInfo } from '../../../Types';
 // eslint-disable-next-line import/no-cycle
 import { generateFieldAccessor } from './FieldHelpers';
 // eslint-disable-next-line import/no-cycle
-import { fixName, generateInheritanceReference, generateTypePath, getQualifiedTypeName } from './TypeNameHelpers';
+import { fixName, generateInheritanceReference, generateTypePath } from './TypeNameHelpers';
 import { TsGenContext } from '../TsGenContext';
 import { BuiltinTypes } from './Constants';
 
@@ -56,7 +56,7 @@ export function generateNameProperty(typeDef: Il2CppTypeDefinitionInfo, context:
     factory.createComputedPropertyName(factory.createIdentifier('TypeName')),
     undefined,
     undefined,
-    factory.createStringLiteral(getQualifiedTypeName(typeDef.Type, context))
+    factory.createStringLiteral(context.types.getTypeName(typeDef.Type, context))
   );
 }
 
@@ -108,7 +108,7 @@ export function writeFunctions(typeDef: Il2CppTypeDefinitionInfo, context: TsGen
   const fns =
     context.typeFunctions[
       // hack: omit root namespace for this name since the original datasource isn't prefixed
-      getQualifiedTypeName(typeDef.Type, { ...context, rootNamespace: '' }, undefined /* relativeTo */)
+      context.types.getTypeName(typeDef.Type, { ...context, rootNamespace: '' }, undefined /* relativeTo */)
     ] ?? [];
 
   const uniqueNames = new Map<string, number>();

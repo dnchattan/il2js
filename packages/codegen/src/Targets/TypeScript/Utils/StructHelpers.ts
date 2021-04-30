@@ -6,7 +6,6 @@ import { BuiltinTypes } from './Constants';
 // eslint-disable-next-line import/no-cycle
 import { generateClassData } from './MemberHelpers';
 // eslint-disable-next-line import/no-cycle
-import { getQualifiedTypeName } from './TypeNameHelpers';
 import { TsGenContext } from '../TsGenContext';
 
 export function findKnownType(type: Il2CppTypeInfo, context: TsGenContext): NativeType | undefined {
@@ -17,7 +16,7 @@ export function isTypeUsable(type: Il2CppTypeInfo, context: TsGenContext): boole
   if (type.IsPrimitive) {
     return true;
   }
-  const name = getQualifiedTypeName(type, context, undefined);
+  const name = context.types.getTypeName(type, context);
   if (!BuiltinTypes[name as keyof typeof BuiltinTypes] && !context.types.hasType(type)) {
     return false;
   }

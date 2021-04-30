@@ -1,12 +1,9 @@
 import ts, { factory } from 'typescript';
-import { assert } from '@il2js/core';
 import { TsGenContext } from '../TsGenContext';
 import { Il2CppTypeInfo } from '../../../Types';
 // eslint-disable-next-line import/no-cycle
 import { findKnownType } from './StructHelpers';
 import { getTypeMapping } from '../TypeMappings';
-// eslint-disable-next-line import/no-cycle
-import { TypeDisposition } from '../TypeRegistry';
 
 const reservedNames = new Set(['name', 'size']);
 
@@ -19,44 +16,13 @@ export function fixName(name: string): string {
   return /* PrimitiveTypeMapping[fixedName as keyof typeof PrimitiveTypeMapping] ?? */ fixedName;
 }
 
-export function getQualifiedTypeName(
-  typeDef: Il2CppTypeInfo,
-  context: TsGenContext,
-  relativeToType?: Il2CppTypeInfo
-): string {
-  const relativeTo =
-    relativeToType &&
-    (relativeToType.Namespace ? relativeToType.Namespace : getQualifiedTypeName(relativeToType, context));
-  if (typeDef.Namespace?.startsWith('il2js') || typeDef.Namespace?.startsWith('System')) {
-    return [typeDef.Namespace, fixName(typeDef.TypeName)].filter(Boolean).join('.');
-  }
-  assert(
-    !(typeDef.Namespace && typeDef.DeclaringType),
-    `Not expected to have both a namespace ('${typeDef.Namespace}' AND a declaring type ('${typeDef.DeclaringType?.Namespace}.${typeDef.DeclaringType?.TypeName}'))`
-  );
-  const disposition = context.types.getTypeDisposition(typeDef);
-  const ns = [
-    disposition === TypeDisposition.Generated ? context.rootNamespace : undefined,
-    typeDef.DeclaringType?.Namespace,
-    typeDef.DeclaringType?.TypeName,
-    typeDef.Namespace,
-  ]
-    .filter(Boolean)
-    .join('.');
-  const fullyQualifiedName = [ns, fixName(typeDef.TypeName)].filter(Boolean).join('.');
-  if (ns === relativeTo || fullyQualifiedName === relativeTo) {
-    return fixName(typeDef.TypeName);
-  }
-  return fullyQualifiedName;
-}
-
 export function generateTypePath<TResult, T extends (left: any, right: any) => TResult>(
   type: Il2CppTypeInfo,
   factoryFn: T,
   context: TsGenContext,
   relativeTo?: Il2CppTypeInfo
 ): TResult | ts.Identifier {
-  const nameParts = getQualifiedTypeName(type, context, relativeTo).split('.');
+  const nameParts = context.types.getTypeName(type, context, relativeTo).split('.');
   let cursor: ts.Identifier | TResult = factory.createIdentifier(nameParts.splice(0, 1)[0]);
   while (nameParts.length > 0) {
     cursor = factoryFn(cursor, factory.createIdentifier(fixName(nameParts.splice(0, 1)[0])));

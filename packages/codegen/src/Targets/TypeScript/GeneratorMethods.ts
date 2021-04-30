@@ -5,7 +5,6 @@ import { DefaultedMap } from '@il2js/core';
 import { Il2JsonFile, Il2CppTypeDefinitionInfo, Il2CppTypeInfo } from '../../Types';
 import { TargetOptions } from '../TargetOptions';
 import { generateClass } from './Utils/StructHelpers';
-import { getQualifiedTypeName } from './Utils/TypeNameHelpers';
 import { TsGenContext } from './TsGenContext';
 import { TypeRegistry } from './TypeRegistry';
 
@@ -22,14 +21,17 @@ const defaultOpts: TargetOptions = {
 
 function orderTypes(typeDef: Il2CppTypeDefinitionInfo[], context: TsGenContext): Il2CppTypeDefinitionInfo[] {
   const allStructs = new Map<string, Il2CppTypeDefinitionInfo>(
-    typeDef.map<[string, Il2CppTypeDefinitionInfo]>((struct) => [getQualifiedTypeName(struct.Type, context), struct])
+    typeDef.map<[string, Il2CppTypeDefinitionInfo]>((struct) => [
+      context.types.getTypeName(struct.Type, context),
+      struct,
+    ])
   );
 
   const edges = typeDef
     .filter((s) => s.Type.BaseType && s.Type.TypeIndex !== s.Type.BaseType.TypeIndex)
     .map<[Il2CppTypeDefinitionInfo, Il2CppTypeDefinitionInfo]>((s) => [
-      allStructs.get(getQualifiedTypeName(s.Type.BaseType!, context))!,
-      allStructs.get(getQualifiedTypeName(s.Type, context))!,
+      allStructs.get(context.types.getTypeName(s.Type.BaseType!, context))!,
+      allStructs.get(context.types.getTypeName(s.Type, context))!,
     ])
     .filter((edge) => edge[0] && edge[1]);
 
@@ -88,6 +90,7 @@ export function groupStructsByNamespace(typeDefs: Il2CppTypeDefinitionInfo[]): N
   }
   return root;
 }
+
 function scopeTypeToDeclaringType(type?: Il2CppTypeInfo) {
   if (!type?.DeclaringType) {
     return;
