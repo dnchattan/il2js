@@ -46,7 +46,9 @@ describe('codegen', () => {
             }
           ),
         ],
-        TypeNameToStaticMethods: {},
+        TypeNameToStaticMethods: {
+          'Test.Foo': [{ Address: 1234, Name: 'get_instance' }],
+        },
       },
     };
     await codegen({
@@ -86,7 +88,9 @@ describe('codegen', () => {
               public get bar(): codegen.Test.Bar {
                   return this.readField(8, codegen.Test.Bar, 1);
               }
-              public static staticMethods = {};
+              public static staticMethods = {
+                  \\"get_instance\\": () => new il2js.MethodInfo(1234)
+              };
           }
       }",
       ]

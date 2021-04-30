@@ -98,7 +98,7 @@ export class TypeRegistry {
       typeDef = this.typeIds.get(typeDef.TypeIndex)!;
     }
     const nsParts: string[] = [];
-    if (disposition === TypeDisposition.Generated) {
+    if (disposition === TypeDisposition.Generated && context.rootNamespace) {
       nsParts.push(context.rootNamespace);
     }
     if (typeDef.DeclaringType) {
