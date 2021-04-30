@@ -1,5 +1,5 @@
 export interface Il2CppStaticMethodInfo {
   Address: number;
-  TypeArgs: string;
+  TypeArgs?: string;
   Name: string;
 }
