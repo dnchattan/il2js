@@ -1,0 +1,7 @@
+{
+  "type": "patch",
+  "comment": "add to core exports",
+  "packageName": "@il2js/core",
+  "email": "dnchattan@gmail.com",
+  "dependentChangeType": "patch"
+}
