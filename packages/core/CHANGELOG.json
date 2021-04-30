@@ -2,6 +2,21 @@
   "name": "@il2js/core",
   "entries": [
     {
+      "date": "Fri, 30 Apr 2021 21:34:44 GMT",
+      "tag": "@il2js/core_v0.1.7",
+      "version": "0.1.7",
+      "comments": {
+        "patch": [
+          {
+            "comment": "add to core exports",
+            "author": "dnchattan@gmail.com",
+            "commit": "ed3ba8fb746e14d821661247fa0bedaff6b5cf6a",
+            "package": "@il2js/core"
+          }
+        ]
+      }
+    },
+    {
       "date": "Tue, 27 Apr 2021 21:27:56 GMT",
       "tag": "@il2js/core_v0.1.6",
       "version": "0.1.6",
