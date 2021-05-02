@@ -1,16 +1,17 @@
 import ts, { factory } from 'typescript';
 import { addressToNumber } from '@il2js/core';
-import { Il2CppTypeDefinitionInfo, Il2CppTypeInfo } from '../../../Types';
+import type { Il2CppTypeDefinitionInfo, Il2CppTypeInfo } from '../../../Types';
 // eslint-disable-next-line import/no-cycle
 import { generateFieldAccessor } from './FieldHelpers';
 // eslint-disable-next-line import/no-cycle
-import { fixName, generateInheritanceReference, generateTypePath } from './TypeNameHelpers';
-import { TsGenContext } from '../TsGenContext';
+import { generateInheritanceReference, generateTypePath } from './TypeNameHelpers';
+import type { CodegenContext } from '../../CodegenContext';
 import { BuiltinTypes } from './Constants';
+import { fixName } from '../../../Utilities';
 
 export function generateSizeProperty(
   typeDef: Il2CppTypeDefinitionInfo,
-  context: TsGenContext,
+  context: CodegenContext,
   relativeTo?: Il2CppTypeInfo
 ): ts.ClassElement {
   const lastField = typeDef.Fields?.[typeDef.Fields.length - 1];
@@ -49,7 +50,7 @@ export function generateSizeProperty(
   );
 }
 
-export function generateNameProperty(typeDef: Il2CppTypeDefinitionInfo, context: TsGenContext): ts.ClassElement {
+export function generateNameProperty(typeDef: Il2CppTypeDefinitionInfo, context: CodegenContext): ts.ClassElement {
   return factory.createPropertyDeclaration(
     undefined,
     factory.createModifiersFromModifierFlags(ts.ModifierFlags.Public | ts.ModifierFlags.Static),
@@ -75,7 +76,7 @@ export function generateAddressProperty(typeDef: Il2CppTypeDefinitionInfo): ts.C
 
 export function writeFieldNameList(
   { Fields, Type }: Il2CppTypeDefinitionInfo,
-  context: TsGenContext
+  context: CodegenContext
 ): ts.PropertyDeclaration {
   const elements: ts.Expression[] = [];
   if (Type.BaseType) {
@@ -104,7 +105,7 @@ export function writeFieldNameList(
   );
 }
 
-export function writeFunctions(typeDef: Il2CppTypeDefinitionInfo, context: TsGenContext) {
+export function writeFunctions(typeDef: Il2CppTypeDefinitionInfo, context: CodegenContext) {
   const fns =
     context.typeFunctions[
       // hack: omit root namespace for this name since the original datasource isn't prefixed
@@ -206,7 +207,7 @@ export function generateConstructor(typeDef: Il2CppTypeDefinitionInfo): ts.Class
   ];
 }
 
-export function generateClassData(typeDef: Il2CppTypeDefinitionInfo, context: TsGenContext) {
+export function generateClassData(typeDef: Il2CppTypeDefinitionInfo, context: CodegenContext) {
   const type = typeDef.Type;
 
   const heritage = [generateInheritanceReference(type.BaseType ?? BuiltinTypes.NativeStruct, context)];
@@ -228,7 +229,10 @@ export function generateClassData(typeDef: Il2CppTypeDefinitionInfo, context: Ts
   return { className, typeParameters, heritage, members };
 }
 
-export function generateClassExpression(typeDef: Il2CppTypeDefinitionInfo, context: TsGenContext): ts.ClassExpression {
+export function generateClassExpression(
+  typeDef: Il2CppTypeDefinitionInfo,
+  context: CodegenContext
+): ts.ClassExpression {
   const { className, typeParameters, heritage, members } = generateClassData(typeDef, context);
 
   const classExpr = factory.createClassExpression(undefined, undefined, className, typeParameters, heritage, members);
@@ -236,7 +240,7 @@ export function generateClassExpression(typeDef: Il2CppTypeDefinitionInfo, conte
   return classExpr;
 }
 
-export function generateNestedTypes(typeDef: Il2CppTypeDefinitionInfo, context: TsGenContext): ts.ClassElement[] {
+export function generateNestedTypes(typeDef: Il2CppTypeDefinitionInfo, context: CodegenContext): ts.ClassElement[] {
   if (!typeDef.NestedTypes) {
     return [];
   }
@@ -254,7 +258,7 @@ export function generateNestedTypes(typeDef: Il2CppTypeDefinitionInfo, context: 
 
 export function generateMembers(
   typeDef: Il2CppTypeDefinitionInfo,
-  context: TsGenContext,
+  context: CodegenContext,
   ...addMembers: readonly ts.ClassElement[]
 ): ts.ClassElement[] {
   const { Fields, StaticFields } = typeDef;

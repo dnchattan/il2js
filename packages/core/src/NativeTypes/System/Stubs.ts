@@ -20,7 +20,6 @@ export class Action<T extends string | number | boolean | NativeTypeInstance = U
     super(address);
   }
 }
-export class DateTime extends TypeStub {}
 export class TimeSpan extends TypeStub {}
 export class LocalDataStoreSlot extends TypeStub {}
 export class Func<T extends string | number | boolean | NativeTypeInstance = UnknownObject> extends TypeStub {

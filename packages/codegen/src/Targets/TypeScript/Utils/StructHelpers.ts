@@ -6,13 +6,13 @@ import { BuiltinTypes } from './Constants';
 // eslint-disable-next-line import/no-cycle
 import { generateClassData } from './MemberHelpers';
 // eslint-disable-next-line import/no-cycle
-import { TsGenContext } from '../TsGenContext';
+import { CodegenContext } from '../../CodegenContext';
 
-export function findKnownType(type: Il2CppTypeInfo, context: TsGenContext): NativeType | undefined {
+export function findKnownType(type: Il2CppTypeInfo, context: CodegenContext): NativeType | undefined {
   return context.types.findType(type);
 }
 
-export function isTypeUsable(type: Il2CppTypeInfo, context: TsGenContext): boolean {
+export function isTypeUsable(type: Il2CppTypeInfo, context: CodegenContext): boolean {
   if (type.IsPrimitive) {
     return true;
   }
@@ -40,7 +40,7 @@ export function fixupType(typeDef: Il2CppTypeInfo): Il2CppTypeInfo {
   return typeDef;
 }
 
-export function visitType(typeDef: Il2CppTypeInfo, context: TsGenContext): Il2CppTypeInfo | undefined {
+export function visitType(typeDef: Il2CppTypeInfo, context: CodegenContext): Il2CppTypeInfo | undefined {
   let result: Il2CppTypeInfo | undefined = typeDef;
   if (context.visitors?.typeRef) {
     result = context.visitors.typeRef(result, context);
@@ -60,7 +60,7 @@ export function visitType(typeDef: Il2CppTypeInfo, context: TsGenContext): Il2Cp
 
 export function visitClass(
   typeDef: Il2CppTypeDefinitionInfo,
-  context: TsGenContext
+  context: CodegenContext
 ): Il2CppTypeDefinitionInfo | undefined {
   let result: Il2CppTypeDefinitionInfo | undefined = typeDef;
   if (context.visitors?.class) {
@@ -99,7 +99,7 @@ export function visitClass(
 
 export function generateClass(
   typeDef: Il2CppTypeDefinitionInfo,
-  context: TsGenContext
+  context: CodegenContext
 ): ts.ClassDeclaration | undefined {
   const def = context ? visitClass(typeDef, context) : typeDef;
   if (!def) {

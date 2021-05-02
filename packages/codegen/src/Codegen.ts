@@ -4,8 +4,9 @@ import { assert, ValueOf } from '@il2js/core';
 import { CodegenApi, TargetOptions, Targets } from './Targets';
 import { TargetOutputOptions } from './Targets/TargetOutputOptions';
 import { Il2CppTypeDefinitionInfo } from './Types';
-import { TypeImport, TypeRegistry } from './Targets/TypeScript/TypeRegistry';
+import { TypeImport, TypeRegistry } from './TypeRegistry';
 import { IGameAssembly } from './IGameAssembly';
+import { optimizeTypes } from './OptimizeTypes';
 
 export interface CodegenOptions {
   gasm: IGameAssembly;
@@ -14,6 +15,7 @@ export interface CodegenOptions {
   types?: (string | TypeImport)[];
   force?: boolean;
   api?: CodegenApi;
+  optimize?: boolean;
   progressCallback?: (n: number, m: number, label: string, item?: Il2CppTypeDefinitionInfo) => void;
 }
 
@@ -31,6 +33,7 @@ export async function codegen({
   force,
   progressCallback,
   api,
+  optimize,
 }: CodegenOptions): Promise<void> {
   const outputFile = path.join(output.outputDir, output.entry);
   if (gasm.cached && fs.existsSync(outputFile) && !force) {
@@ -39,6 +42,10 @@ export async function codegen({
   }
 
   await gasm.load();
+
+  if (optimize) {
+    optimizeTypes(gasm.structs);
+  }
 
   const typeRegistry = new TypeRegistry();
   const typeList: (string | TypeImport)[] = types ?? ['@il2js/core'];

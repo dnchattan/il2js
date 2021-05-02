@@ -2,11 +2,10 @@ import ts, { factory } from 'typescript';
 import multimatch from 'multimatch';
 import toposort from 'toposort';
 import { DefaultedMap } from '@il2js/core';
-import { Il2JsonFile, Il2CppTypeDefinitionInfo, Il2CppTypeInfo } from '../../Types';
-import { TargetOptions } from '../TargetOptions';
+import type { Il2JsonFile, Il2CppTypeDefinitionInfo, Il2CppTypeInfo, ITypeRegistry } from '../..';
+import type { TargetOptions } from '../TargetOptions';
 import { generateClass } from './Utils/StructHelpers';
-import { TsGenContext } from './TsGenContext';
-import { TypeRegistry } from './TypeRegistry';
+import type { CodegenContext } from '../CodegenContext';
 
 export interface Namespace {
   name: string;
@@ -19,7 +18,7 @@ const defaultOpts: TargetOptions = {
   rootNamespace: 'codegen',
 };
 
-function orderTypes(typeDef: Il2CppTypeDefinitionInfo[], context: TsGenContext): Il2CppTypeDefinitionInfo[] {
+function orderTypes(typeDef: Il2CppTypeDefinitionInfo[], context: CodegenContext): Il2CppTypeDefinitionInfo[] {
   const allStructs = new Map<string, Il2CppTypeDefinitionInfo>(
     typeDef.map<[string, Il2CppTypeDefinitionInfo]>((struct) => [
       context.types.getTypeName(struct.Type, context),
@@ -44,7 +43,7 @@ async function sleep(ms: number): Promise<void> {
 
 async function generateFlatCode(
   types: Il2CppTypeDefinitionInfo[],
-  context: TsGenContext,
+  context: CodegenContext,
   progressCallback: ((n: number, m: number, label: string, item?: Il2CppTypeDefinitionInfo) => void) | undefined
 ): Promise<ts.Statement[]> {
   const orderedTypes = types; // orderTypes(types, context); // should already be ordered before entering
@@ -144,13 +143,13 @@ export async function generateFileAsync(
   { TypeInfoList, TypeNameToStaticMethods }: Il2JsonFile,
   assembly: string,
   version: string,
-  types: TypeRegistry,
+  types: ITypeRegistry,
   opts?: Partial<TargetOptions>,
   progressCallback?: (n: number, m: number, label: string, item?: Il2CppTypeDefinitionInfo) => void
 ): Promise<ts.Node[]> {
   const options = { ...defaultOpts, ...opts };
 
-  const context: TsGenContext = {
+  const context: CodegenContext = {
     rootNamespace: options.rootNamespace,
     typeFunctions: TypeNameToStaticMethods,
     types,

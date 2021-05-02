@@ -1,7 +1,7 @@
 import { printTsNode, fakeContext } from '../Test';
 import { mockIl2CppTypeDefinitionInfo, mockIl2CppTypeInfo } from '../../../Types';
 import { generateClass } from './StructHelpers';
-import { TypeRegistry } from '../TypeRegistry';
+import { TypeRegistry } from '../../../TypeRegistry';
 
 describe('TsGen', () => {
   describe('class', () => {
