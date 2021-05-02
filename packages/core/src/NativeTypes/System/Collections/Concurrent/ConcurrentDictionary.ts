@@ -3,7 +3,7 @@ import { Type } from 'ref-napi';
 import { Address } from '../../../../Address';
 import { bindTypeArgs } from '../../../../BindTypeArgs';
 import { TypeName } from '../../../../FieldSymbols';
-import { NativeTypeInstance, NativeType } from '../../../../NativeType';
+import { NativeTypeInstance, NativeType, FieldType } from '../../../../NativeType';
 import { il2js } from '../../../il2js';
 import { UnknownObject } from '../../../il2js/_TypeIndex';
 import { ManagedArray } from '../../Internal/ManagedArray';
@@ -35,8 +35,8 @@ struct __declspec(align(8)) System_Collections_Concurrent_ConcurrentDictionary_T
 * */
 
 export abstract class GenericKeyValuePairType<
-  K extends string | number | boolean | NativeTypeInstance = UnknownObject,
-  V extends string | number | boolean | NativeTypeInstance = UnknownObject
+  K extends FieldType = UnknownObject,
+  V extends FieldType = UnknownObject
 > extends il2js.NativeStruct {
   static size = 0;
   protected readonly ktype: string | Type | NativeType;
@@ -57,8 +57,8 @@ export abstract class GenericKeyValuePairType<
 }
 
 class ConcurrentDictionaryNode<
-  K extends string | number | boolean | NativeTypeInstance = UnknownObject,
-  V extends string | number | boolean | NativeTypeInstance = UnknownObject
+  K extends FieldType = UnknownObject,
+  V extends FieldType = UnknownObject
 > extends GenericKeyValuePairType<K, V> {
   public static readonly [TypeName] = 'System.Collections.Concurrent.Details.ConcurrentDictionaryNode';
   static size = 0;
@@ -77,8 +77,8 @@ class ConcurrentDictionaryNode<
 }
 
 class ConcurrentDictionaryTable<
-  K extends string | number | boolean | NativeTypeInstance = UnknownObject,
-  V extends string | number | boolean | NativeTypeInstance = UnknownObject
+  K extends FieldType = UnknownObject,
+  V extends FieldType = UnknownObject
 > extends GenericKeyValuePairType<K, V> {
   public static readonly [TypeName] = 'System.Collections.Concurrent.Details.ConcurrentDictionaryTable';
   static size = 0;
@@ -89,8 +89,8 @@ class ConcurrentDictionaryTable<
 }
 
 export class ConcurrentDictionary<
-  K extends string | number | boolean | NativeTypeInstance = UnknownObject,
-  V extends string | number | boolean | NativeTypeInstance = UnknownObject
+  K extends FieldType = UnknownObject,
+  V extends FieldType = UnknownObject
 > extends GenericKeyValuePairType<K, V> {
   public static readonly [TypeName] = 'System.Collections.Concurrent.ConcurrentDictionary';
   static size = 0;

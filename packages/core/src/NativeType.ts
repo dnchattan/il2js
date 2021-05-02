@@ -1,6 +1,8 @@
 import type { Address, Size } from './Address';
 import { TypeName } from './FieldSymbols';
 
+export type FieldType = string | number | boolean | Date | NativeTypeInstance;
+
 export interface NativeType<T extends NativeTypeInstance = NativeTypeInstance> {
   new (address: Address, ...typeArgs: any[]): T;
   readonly [TypeName]: string;

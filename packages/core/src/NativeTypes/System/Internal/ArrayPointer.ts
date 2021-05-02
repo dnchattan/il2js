@@ -1,14 +1,12 @@
 import { Type } from 'ref-napi';
 import { Address } from '../../../Address';
-import { NativeTypeInstance, NativeType } from '../../../NativeType';
+import { NativeTypeInstance, NativeType, FieldType } from '../../../NativeType';
 import { TypeName } from '../../../FieldSymbols';
 import { NativeStruct, UnknownObject } from '../../il2js/_TypeIndex';
 import { PrimitiveTypes } from '../../../PrimitiveTypes';
 import { assert } from '../../../Helpers';
 
-export class ArrayPointer<
-  T extends string | number | boolean | NativeTypeInstance = UnknownObject
-> extends NativeStruct {
+export class ArrayPointer<T extends FieldType = UnknownObject> extends NativeStruct {
   public static [TypeName] = 'System.Internal.ArrayPointer';
   static size = 0;
   private readonly itemSize: number;

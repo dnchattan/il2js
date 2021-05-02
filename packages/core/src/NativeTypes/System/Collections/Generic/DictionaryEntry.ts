@@ -1,13 +1,13 @@
 import { String } from '../../String';
 import { Address, Size } from '../../../../Address';
-import { NativeType, NativeTypeInstance } from '../../../../NativeType';
+import { FieldType, NativeType, NativeTypeInstance } from '../../../../NativeType';
 import { sizeofPrimitiveOrPointer } from '../../../../TypeHelpers';
 import { il2js } from '../../../il2js';
 import { UnknownObject } from '../../../il2js/_TypeIndex';
 
 export class DictionaryEntry<
-  K extends string | number | boolean | NativeTypeInstance = UnknownObject,
-  V extends string | number | boolean | NativeTypeInstance = UnknownObject
+  K extends FieldType = UnknownObject,
+  V extends FieldType = UnknownObject
 > extends il2js.NativeStruct {
   static size: Size = 24;
 

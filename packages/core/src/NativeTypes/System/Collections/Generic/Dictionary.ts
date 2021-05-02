@@ -2,16 +2,13 @@ import { types } from 'ref-napi';
 import { String } from '../../String';
 import { Address } from '../../../../Address';
 import { bindTypeArgs } from '../../../../BindTypeArgs';
-import { NativeTypeInstance, NativeType } from '../../../../NativeType';
+import { NativeTypeInstance, NativeType, FieldType } from '../../../../NativeType';
 import { TypeName } from '../../../../FieldSymbols';
 import { NativeStruct, UnknownObject } from '../../../il2js/_TypeIndex';
 import { ManagedArray } from '../../Internal/ManagedArray';
 import { DictionaryEntry } from './DictionaryEntry';
 
-export class Dictionary<
-  K extends string | number | boolean | NativeTypeInstance = UnknownObject,
-  V extends string | number | boolean | NativeTypeInstance = UnknownObject
-> extends NativeStruct {
+export class Dictionary<K extends FieldType = UnknownObject, V extends FieldType = UnknownObject> extends NativeStruct {
   public static readonly [TypeName] = 'System.Dictionary';
   static size = 0;
   private readonly ktype: K extends NativeTypeInstance ? NativeType<K> : string | string;

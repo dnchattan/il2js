@@ -1,14 +1,12 @@
 import { Address, Size } from '../../../Address';
 import { TypeName } from '../../../FieldSymbols';
 import { assert } from '../../../Helpers';
-import { NativeType, NativeTypeInstance } from '../../../NativeType';
+import { FieldType, NativeType, NativeTypeInstance } from '../../../NativeType';
 import { isPrimitiveType, sizeofType } from '../../../TypeHelpers';
 import { NativeStruct } from '../../il2js/NativeStruct';
 import { UnknownObject } from '../../il2js/UnknownObject';
 
-export class ManagedArray<T extends string | number | boolean | NativeTypeInstance = UnknownObject>
-  extends NativeStruct
-  implements Iterable<T> {
+export class ManagedArray<T extends FieldType = UnknownObject> extends NativeStruct implements Iterable<T> {
   public static [TypeName] = 'System.Internal.ManagedArray';
   static size = 40;
   private readonly itemSize: Size;
