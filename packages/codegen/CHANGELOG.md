@@ -1,8 +1,16 @@
 # Change Log - @il2js/codegen
 
-This log was last generated on Sun, 02 May 2021 15:00:13 GMT and should not be manually modified.
+This log was last generated on Sun, 02 May 2021 22:09:30 GMT and should not be manually modified.
 
 <!-- Start content -->
+
+## 0.2.14
+
+Sun, 02 May 2021 22:09:30 GMT
+
+### Patches
+
+- improve filters, add optimization, Datetime type (dnchattan@gmail.com)
 
 ## 0.2.13
 

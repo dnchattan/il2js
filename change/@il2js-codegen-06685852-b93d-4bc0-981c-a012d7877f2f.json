@@ -1,7 +1,0 @@
-{
-  "type": "patch",
-  "comment": "improve filters, add optimization, Datetime type",
-  "packageName": "@il2js/codegen",
-  "email": "dnchattan@gmail.com",
-  "dependentChangeType": "patch"
-}
