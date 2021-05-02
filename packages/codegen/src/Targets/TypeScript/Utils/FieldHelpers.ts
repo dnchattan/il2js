@@ -1,10 +1,11 @@
 import ts, { factory } from 'typescript';
 import { assert } from '@il2js/core';
-import { TsGenContext } from '../TsGenContext';
-import { Il2CppFieldInfo, Il2CppTypeInfo } from '../../../Types';
+import type { CodegenContext } from '../../CodegenContext';
+import type { Il2CppFieldInfo, Il2CppTypeInfo } from '../../../Types';
 // eslint-disable-next-line import/no-cycle
-import { fixName, generateTypePath, generateTypeReference } from './TypeNameHelpers';
+import { generateTypePath, generateTypeReference } from './TypeNameHelpers';
 import { getTypeMapping } from '../TypeMappings';
+import { fixName } from '../../../Utilities';
 
 export function generateReadPrimitiveCall(field: Il2CppFieldInfo): ts.CallExpression {
   return factory.createCallExpression(
@@ -21,7 +22,7 @@ export function generateReadPrimitiveCall(field: Il2CppFieldInfo): ts.CallExpres
 
 function typeArgumentsToParameters(
   typeArguments: Il2CppTypeInfo[],
-  context: TsGenContext,
+  context: CodegenContext,
   relativeTo: Il2CppTypeInfo | undefined
 ): ts.Expression[] {
   const parameters: ts.Expression[] = [];
@@ -45,7 +46,7 @@ function typeArgumentsToParameters(
 
 export function generateReadFieldCall(
   field: Il2CppFieldInfo,
-  context: TsGenContext,
+  context: CodegenContext,
   relativeTo: Il2CppTypeInfo | undefined
 ): ts.CallExpression {
   const parameters: ts.Expression[] = [
@@ -66,7 +67,7 @@ export function generateReadFieldCall(
 
 export function generateFieldAccessor(
   field: Il2CppFieldInfo,
-  context: TsGenContext,
+  context: CodegenContext,
   relativeTo: Il2CppTypeInfo | undefined,
   isStatic: boolean
 ): ts.ClassElement {

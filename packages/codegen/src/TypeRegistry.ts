@@ -1,8 +1,8 @@
 import { assert, NativeType, isNativeType, excludeUndefined } from '@il2js/core';
-import { Il2CppTypeDefinitionInfo, Il2CppTypeInfo } from '../../Types';
-import { TsGenContext } from './TsGenContext';
-// eslint-disable-next-line import/no-cycle
-import { fixName } from './Utils/TypeNameHelpers';
+import { Il2CppTypeDefinitionInfo, Il2CppTypeInfo } from './Types';
+import { CodegenContext } from './Targets';
+import { fixName } from './Utilities';
+import { TypeDisposition, ITypeRegistry } from './Types/Compiler';
 
 export interface TypeImport {
   from: string;
@@ -29,13 +29,7 @@ function mergeTypeTree(left: TypeTree, right: Readonly<TypeTree>) {
   }
 }
 
-export enum TypeDisposition {
-  Missing,
-  Generated,
-  Imported,
-}
-
-export class TypeRegistry {
+export class TypeRegistry implements ITypeRegistry {
   private types: TypeTree = {};
   private typeIds = new Map<number, Il2CppTypeInfo>();
   readonly imports: [string[], string][] = [];
@@ -81,7 +75,7 @@ export class TypeRegistry {
     return true;
   }
 
-  getTypeName(typeDef: Il2CppTypeInfo, context: TsGenContext, relativeToType?: Il2CppTypeInfo): string {
+  getTypeName(typeDef: Il2CppTypeInfo, context: CodegenContext, relativeToType?: Il2CppTypeInfo): string {
     const relativeTo =
       relativeToType &&
       (relativeToType.Namespace ? relativeToType.Namespace : this.getTypeName(relativeToType, context));

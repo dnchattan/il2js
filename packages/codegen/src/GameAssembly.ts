@@ -7,7 +7,7 @@ import { stderr } from 'chalk';
 import md5 from 'md5';
 import { Il2JsonFile } from './Types';
 import { IGameAssembly } from './IGameAssembly';
-import { TypeVisitor, OutputFilter } from './OutputFilter';
+import { TypeFilter, OutputFilter } from './OutputFilter';
 
 const findNodeModules: (opts?: { cwd?: string; relative?: boolean }) => string[] = require('find-node-modules');
 
@@ -45,7 +45,7 @@ export class GameAssembly implements IGameAssembly {
     readonly globalMetadataPath: string,
     readonly version: string,
     private readonly outDir: string,
-    private readonly filterOutputVisitor?: TypeVisitor
+    private readonly filterOutputVisitor?: TypeFilter
   ) {}
 
   async load() {

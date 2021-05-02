@@ -2,12 +2,11 @@
 import ts from 'typescript';
 import path from 'path';
 import { assert } from '@il2js/core';
-import { Il2JsonFile, Il2CppTypeDefinitionInfo } from '../../Types';
+import { Il2JsonFile, Il2CppTypeDefinitionInfo, ITypeRegistry } from '../../Types';
 import { TargetOptions } from '../TargetOptions';
 import { Target } from '../Target';
 import { generateFileAsync } from './GeneratorMethods';
 import { TargetOutputOptions } from '../TargetOutputOptions';
-import { TypeRegistry } from './TypeRegistry';
 import { CodegenApi } from '../CodegenApi';
 
 export class TsTarget implements Target {
@@ -17,7 +16,7 @@ export class TsTarget implements Target {
   constructor(
     private readonly assembly: string,
     private readonly version: string,
-    private readonly types: TypeRegistry,
+    private readonly types: ITypeRegistry,
     private readonly api: CodegenApi
   ) {}
 

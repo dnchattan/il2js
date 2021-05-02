@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "buildpkg": "backfill -- just build",
+    "lint": "eslint ./src --ext .ts,.tsx",
     "ci": "just ci"
   },
   "peerDependencies": {

@@ -10,7 +10,8 @@
         "editor.defaultFormatter": "vscode.json-language-features"
     },
     "files.associations": {
-        "*.db": "json"
+        "*.db": "json",
+        "*.ts.txt": "typescript"
     },
     "files.exclude": {
         "lib": true,

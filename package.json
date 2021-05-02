@@ -7,7 +7,7 @@
     "change": "beachball change",
     "check": "beachball check",
     "build": "tsc --build",
-    "ci": "tsc --build && jest"
+    "ci": "tsc --build && jest && lerna run lint"
   },
   "workspaces": {
     "packages": [

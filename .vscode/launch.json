@@ -21,5 +21,26 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run local test",
+      "cwd": "${workspaceRoot}/packages/codegen",
+      "args": [
+        "--run",
+        "--force"
+      ],
+      "runtimeArgs": [
+        "--nolazy",
+        "-r",
+        "${workspaceFolder}/scripts/enable-ts",
+        "${workspaceRoot}/packages/codegen/src/LocalTest.ts"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
   ]
 }

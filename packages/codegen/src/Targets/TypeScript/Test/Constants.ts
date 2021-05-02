@@ -1,7 +1,7 @@
-import { TsGenContext } from '../TsGenContext';
-import { TypeRegistry } from '../TypeRegistry';
+import { CodegenContext } from '../../CodegenContext';
+import { TypeRegistry } from '../../../TypeRegistry';
 
-export const fakeContext: TsGenContext = {
+export const fakeContext: CodegenContext = {
   rootNamespace: '',
   typeFunctions: {},
   types: new TypeRegistry(),

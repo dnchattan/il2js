@@ -1,31 +1,16 @@
 /* eslint-disable max-classes-per-file */
 
 import type { Il2CppTypeDefinitionInfo, Il2CppTypeInfo, Il2JsonFile } from '.';
+import { OncePer } from './Utilities';
 
-export interface TypeVisitor {
-  visitType?(type: Il2CppTypeDefinitionInfo): TypeVisitor | boolean;
-  visitTypeUsage?(type: Il2CppTypeInfo): TypeVisitor | boolean;
-}
-
-export class OncePer<T, U> {
-  private storage = new Map<T, U[]>();
-  once(t: T, u: U): boolean {
-    const entry = this.storage.get(t);
-    if (!entry) {
-      this.storage.set(t, [u]);
-      return true;
-    }
-    if (!entry.includes(u)) {
-      entry.push(u);
-      return true;
-    }
-    return false;
-  }
+export interface TypeFilter {
+  visitType?(type: Il2CppTypeDefinitionInfo): TypeFilter | boolean;
+  visitTypeUsage?(type: Il2CppTypeInfo): TypeFilter | boolean;
 }
 
 export class OutputFilter {
   readonly typesList: Set<Il2CppTypeDefinitionInfo> = new Set();
-  readonly visitors: OncePer<TypeVisitor, Il2CppTypeDefinitionInfo | Il2CppTypeInfo> = new OncePer();
+  readonly visitors: OncePer<TypeFilter, Il2CppTypeDefinitionInfo | Il2CppTypeInfo> = new OncePer();
 
   constructor(private file: Il2JsonFile) {}
 
@@ -35,7 +20,7 @@ export class OutputFilter {
     );
   }
 
-  processRefs(visitor: TypeVisitor, ...typeRefs: (Il2CppTypeInfo | undefined)[]): this {
+  processRefs(visitor: TypeFilter, ...typeRefs: (Il2CppTypeInfo | undefined)[]): this {
     for (const typeRef of typeRefs) {
       if (!typeRef) {
         continue;
@@ -48,16 +33,14 @@ export class OutputFilter {
       if (typeDef && visitorResult) {
         const nextVisitor = visitorResult === true ? visitor : visitorResult;
         this.typesList.add(typeDef);
-        if (typeDef && this.visitors.once(nextVisitor, typeRef)) {
-          this.includeReferences(nextVisitor, typeDef);
-        }
+        this.includeReferences(nextVisitor, typeDef);
       }
       this.processRefs(visitor, ...(typeRef.TypeArguments ?? []), typeDef?.Type.BaseType);
     }
     return this;
   }
 
-  includeReferences(visitor: TypeVisitor, typeDef: Il2CppTypeDefinitionInfo): this {
+  includeReferences(visitor: TypeFilter, typeDef: Il2CppTypeDefinitionInfo): this {
     if (!this.visitors.once(visitor, typeDef)) {
       return this;
     }
@@ -71,7 +54,7 @@ export class OutputFilter {
     return this;
   }
 
-  include(visitor: TypeVisitor): this {
+  include(visitor: TypeFilter): this {
     for (const type of this.file.TypeInfoList) {
       const visitorResult = visitor.visitType?.(type);
       if (visitorResult) {

@@ -1,25 +1,15 @@
 import ts, { factory } from 'typescript';
-import { TsGenContext } from '../TsGenContext';
+import { CodegenContext } from '../../CodegenContext';
 import { Il2CppTypeInfo } from '../../../Types';
 // eslint-disable-next-line import/no-cycle
 import { findKnownType } from './StructHelpers';
 import { getTypeMapping } from '../TypeMappings';
-
-const reservedNames = new Set(['name', 'size']);
-
-export function fixName(name: string): string {
-  // eslint-disable-next-line no-useless-escape
-  const fixedName = name.replace(/[<>\[\]=,\s|\.]/g, '_');
-  if (reservedNames.has(fixedName)) {
-    return `_${fixedName}`;
-  }
-  return /* PrimitiveTypeMapping[fixedName as keyof typeof PrimitiveTypeMapping] ?? */ fixedName;
-}
+import { fixName } from '../../../Utilities';
 
 export function generateTypePath<TResult, T extends (left: any, right: any) => TResult>(
   type: Il2CppTypeInfo,
   factoryFn: T,
-  context: TsGenContext,
+  context: CodegenContext,
   relativeTo?: Il2CppTypeInfo
 ): TResult | ts.Identifier {
   const nameParts = context.types.getTypeName(type, context, relativeTo).split('.');
@@ -32,7 +22,7 @@ export function generateTypePath<TResult, T extends (left: any, right: any) => T
 
 export function generateTypeReference(
   type: Il2CppTypeInfo,
-  context: TsGenContext,
+  context: CodegenContext,
   relativeTo: Il2CppTypeInfo | undefined
 ): ts.TypeReferenceNode | ts.LiteralTypeNode | ts.TypeQueryNode {
   if (type.IsPrimitive) {
@@ -55,7 +45,7 @@ export function generateTypeReference(
   );
 }
 
-export function generateInheritanceReference(type: Il2CppTypeInfo, context: TsGenContext): ts.HeritageClause {
+export function generateInheritanceReference(type: Il2CppTypeInfo, context: CodegenContext): ts.HeritageClause {
   const typeArguments = type.TypeArguments?.length
     ? type.TypeArguments.map((argType) => generateTypeReference(argType, context, type))
     : undefined;
