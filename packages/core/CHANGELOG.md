@@ -1,8 +1,16 @@
 # Change Log - @il2js/core
 
-This log was last generated on Sun, 02 May 2021 22:09:30 GMT and should not be manually modified.
+This log was last generated on Sun, 02 May 2021 22:16:58 GMT and should not be manually modified.
 
 <!-- Start content -->
+
+## 0.1.9
+
+Sun, 02 May 2021 22:16:58 GMT
+
+### Patches
+
+- add Date to valid types (dnchattan@gmail.com)
 
 ## 0.1.8
 

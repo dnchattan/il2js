@@ -1,7 +1,0 @@
-{
-  "type": "patch",
-  "comment": "add Date to valid types",
-  "packageName": "@il2js/core",
-  "email": "dnchattan@gmail.com",
-  "dependentChangeType": "patch"
-}
