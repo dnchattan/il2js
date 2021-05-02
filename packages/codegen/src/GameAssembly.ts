@@ -7,8 +7,7 @@ import { stderr } from 'chalk';
 import md5 from 'md5';
 import { Il2JsonFile } from './Types';
 import { IGameAssembly } from './IGameAssembly';
-import { TypeVisitor } from './OutputFilter';
-import { OutputFilter } from '.';
+import { TypeVisitor, OutputFilter } from './OutputFilter';
 
 const findNodeModules: (opts?: { cwd?: string; relative?: boolean }) => string[] = require('find-node-modules');
 
