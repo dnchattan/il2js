@@ -1,14 +1,12 @@
 import { types } from 'ref-napi';
 import { Address } from '../../../../Address';
-import { NativeTypeInstance, NativeType } from '../../../../NativeType';
+import { NativeTypeInstance, NativeType, FieldType } from '../../../../NativeType';
 import { TypeName } from '../../../../FieldSymbols';
 import { NativeStruct, UnknownObject } from '../../../il2js/_TypeIndex';
 import { ArrayPointer } from '../../Internal/ArrayPointer';
 import { assert } from '../../../../Helpers';
 
-export class List<T extends string | number | boolean | NativeTypeInstance = UnknownObject>
-  extends NativeStruct
-  implements Iterable<T> {
+export class List<T extends FieldType = UnknownObject> extends NativeStruct implements Iterable<T> {
   public static [TypeName] = 'System.List';
   static size = 36;
   private readonly vtype: (T extends NativeTypeInstance ? NativeType<T> : string) | string;
