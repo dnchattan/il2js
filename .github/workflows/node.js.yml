@@ -20,7 +20,7 @@ jobs:
         registry-url: <registry url>
     - run: yarn install
     - run: yarn ci
-    - run: yarn run publish
+    - run: yarn run publish --yes
       env:
         NODE_AUTH_TOKEN: ${{ secrets.YARN_TOKEN }}
 
