@@ -1,4 +1,4 @@
-import { TypeVisitors } from './TypeVisitors';
+import type { TypeVisitors } from './TypeVisitors';
 
 export interface TargetOptions {
   imageGlobs?: string[];

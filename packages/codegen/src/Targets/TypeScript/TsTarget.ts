@@ -3,11 +3,11 @@ import ts from 'typescript';
 import path from 'path';
 import { assert } from '@il2js/core';
 import { Il2JsonFile, Il2CppTypeDefinitionInfo, ITypeRegistry } from '../../Types';
-import { TargetOptions } from '../TargetOptions';
 import { Target } from '../Target';
 import { generateFileAsync } from './GeneratorMethods';
 import { TargetOutputOptions } from '../TargetOutputOptions';
 import { CodegenApi } from '../CodegenApi';
+import type { Il2JsConfig } from '../../Il2JsConfigFile';
 
 export class TsTarget implements Target {
   static targetName: 'typescript' = 'typescript';
@@ -22,7 +22,7 @@ export class TsTarget implements Target {
 
   async process(
     il2js: Il2JsonFile,
-    opts: TargetOptions,
+    opts: Il2JsConfig,
     progressCallback?: (n: number, m: number, label: string, item?: Il2CppTypeDefinitionInfo) => void
   ): Promise<void> {
     this.nodes = await generateFileAsync(il2js, this.assembly, this.version, this.types, opts, progressCallback);

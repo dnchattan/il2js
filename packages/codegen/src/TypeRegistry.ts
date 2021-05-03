@@ -1,15 +1,9 @@
-import { assert, NativeType, isNativeType, excludeUndefined } from '@il2js/core';
+import { assert, excludeUndefined, NativeTypeCodegenDescriptor, isNativeTypeCodegenDescriptor } from '@il2js/core';
 import { Il2CppTypeDefinitionInfo, Il2CppTypeInfo } from './Types';
 import { CodegenContext } from './Targets';
 import { fixName } from './Utilities';
-import { TypeDisposition, ITypeRegistry } from './Types/Compiler';
-
-export interface TypeImport {
-  from: string;
-  types: TypeTree;
-}
-
-export type TypeTree = { [key: string]: Readonly<TypeTree | NativeType> | undefined };
+import { TypeDisposition, ITypeRegistry, TypeTree } from './Types/Compiler';
+import { TypeImport } from './Types/Compiler/TypeImport';
 
 function mergeTypeTree(left: TypeTree, right: Readonly<TypeTree>) {
   const keys = Object.keys(right);
@@ -22,8 +16,8 @@ function mergeTypeTree(left: TypeTree, right: Readonly<TypeTree>) {
     } else {
       // can only merge namespaces, not types
       assert(!!rightValue);
-      assert(!isNativeType(leftValue));
-      assert(!isNativeType(rightValue));
+      assert(!isNativeTypeCodegenDescriptor(leftValue));
+      assert(!isNativeTypeCodegenDescriptor(rightValue));
       mergeTypeTree(leftValue as TypeTree, right[key] as TypeTree);
     }
   }
@@ -34,7 +28,19 @@ export class TypeRegistry implements ITypeRegistry {
   private typeIds = new Map<number, Il2CppTypeInfo>();
   readonly imports: [string[], string][] = [];
 
-  findType(type: Il2CppTypeInfo): NativeType | undefined {
+  constructor(types: (string | TypeImport)[] = ['@il2js/core']) {
+    for (const entry of types) {
+      if (typeof entry === 'string') {
+        // eslint-disable-next-line import/no-dynamic-require, global-require
+        const { typeExport } = require(entry);
+        this.addTypes({ from: entry, types: typeExport });
+      } else {
+        this.addTypes(entry);
+      }
+    }
+  }
+
+  findType(type: Il2CppTypeInfo): NativeTypeCodegenDescriptor | undefined {
     const namePath: string[] = [...(type.Namespace?.split('.') || []), fixName(type.TypeName)].filter(
       Boolean
     ) as string[];

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "ES2020",
     "module": "commonjs",
     "importHelpers": true,
     "esModuleInterop": true,
@@ -9,7 +9,7 @@
     "jsx": "preserve",
     "lib": [
       "esnext",
-      "ES2017"
+      "ES2020"
     ],
     "strict": true,
     "alwaysStrict": true,

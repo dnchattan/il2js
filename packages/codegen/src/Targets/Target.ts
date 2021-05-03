@@ -1,12 +1,12 @@
-import { Il2CppTypeDefinitionInfo, Il2JsonFile, ITypeRegistry } from '../Types';
-import { CodegenApi } from './CodegenApi';
-import { TargetOptions } from './TargetOptions';
-import { TargetOutputOptions } from './TargetOutputOptions';
+import type { Il2JsConfig } from '../Il2JsConfigFile';
+import type { Il2CppTypeDefinitionInfo, Il2JsonFile, ITypeRegistry } from '../Types';
+import type { CodegenApi } from './CodegenApi';
+import type { TargetOutputOptions } from './TargetOutputOptions';
 
 export interface Target {
   process(
     il2js: Il2JsonFile,
-    opts: TargetOptions,
+    opts: Il2JsConfig,
     progressCallback?: (n: number, m: number, label: string, item?: Il2CppTypeDefinitionInfo) => void
   ): Promise<void>;
   write(options: TargetOutputOptions): Promise<void>;

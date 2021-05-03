@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import ts, { factory } from 'typescript';
-import { excludeUndefined, NativeType } from '@il2js/core';
+import { excludeUndefined, NativeTypeCodegenDescriptor } from '@il2js/core';
 import type { Il2CppTypeDefinitionInfo, Il2CppTypeInfo } from '../../../Types';
 import { BuiltinTypes } from './Constants';
 // eslint-disable-next-line import/no-cycle
@@ -8,7 +8,7 @@ import { generateClassData } from './MemberHelpers';
 // eslint-disable-next-line import/no-cycle
 import { CodegenContext } from '../../CodegenContext';
 
-export function findKnownType(type: Il2CppTypeInfo, context: CodegenContext): NativeType | undefined {
+export function findKnownType(type: Il2CppTypeInfo, context: CodegenContext): NativeTypeCodegenDescriptor | undefined {
   return context.types.findType(type);
 }
 
