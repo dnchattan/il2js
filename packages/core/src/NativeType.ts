@@ -3,12 +3,16 @@ import { TypeName } from './FieldSymbols';
 
 export type FieldType = string | number | boolean | Date | NativeTypeInstance;
 
-export interface NativeType<T extends NativeTypeInstance = NativeTypeInstance> {
+export interface NativeTypeCodegenDescriptor {
+  readonly name: string;
+  readonly boxedValue?: string;
+}
+
+export interface NativeType<T extends NativeTypeInstance = NativeTypeInstance> extends NativeTypeCodegenDescriptor {
   new (address: Address, ...typeArgs: any[]): T;
   readonly [TypeName]: string;
   readonly size: Size;
   readonly address: Address;
-  readonly boxedValue?: string;
   readonly fieldNames?: string[];
   calculateSize?(...typeArgs: any[]): number;
 }

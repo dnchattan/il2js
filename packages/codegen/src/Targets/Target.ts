@@ -1,7 +1,7 @@
-import { Il2CppTypeDefinitionInfo, Il2JsonFile, ITypeRegistry } from '../Types';
-import { CodegenApi } from './CodegenApi';
-import { TargetOptions } from './TargetOptions';
-import { TargetOutputOptions } from './TargetOutputOptions';
+import type { Il2CppTypeDefinitionInfo, Il2JsonFile, ITypeRegistry } from '../Types';
+import type { CodegenApi } from './CodegenApi';
+import type { TargetOptions } from './TargetOptions';
+import type { TargetOutputOptions } from './TargetOutputOptions';
 
 export interface Target {
   process(

@@ -67,10 +67,9 @@ function optimizeWorker(file: Il2JsonFile): boolean {
 
 export function optimizeTypes(file: Il2JsonFile): boolean {
   let passes = 1;
-  console.log(`Optimization pass #${passes}`);
-  while (optimizeWorker(file)) {
-    ++passes;
-    console.log(`Optimization pass #${passes}`);
-  }
+  do {
+    console.log(`Optimization pass #${passes++}`);
+  } while (optimizeWorker(file));
+
   return passes > 1;
 }

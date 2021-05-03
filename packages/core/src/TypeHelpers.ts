@@ -1,12 +1,16 @@
 import type { Type } from 'ref-napi';
 import type { Size } from './Address';
-import type { NativeType } from './NativeType';
+import type { NativeType, NativeTypeCodegenDescriptor } from './NativeType';
 import { TypeName } from './FieldSymbols';
 import { PrimitiveTypes } from './PrimitiveTypes';
 import { assert } from './Helpers';
 
 export function isNativeType(type: NativeType | string | number | boolean | Type | unknown): type is NativeType {
   return (type as any).name !== undefined;
+}
+
+export function isNativeTypeCodegenDescriptor(type: unknown): type is NativeTypeCodegenDescriptor {
+  return (type as NativeTypeCodegenDescriptor).name !== undefined;
 }
 
 export function isPrimitiveType(type: Type | NativeType | string | number | boolean): type is Type | string {

@@ -1,7 +1,7 @@
 // @ts-check
 const { task, series, tscTask, jestTask, parallel, eslintTask } = require('just-scripts');
 
-task('ts', tscTask());
+task('ts', tscTask({ build: '.' }));
 task('test', jestTask());
 task('lint', eslintTask({ files: ['src'] }));
 

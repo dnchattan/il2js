@@ -4,7 +4,8 @@ import { assert, ValueOf } from '@il2js/core';
 import { CodegenApi, TargetOptions, Targets } from './Targets';
 import { TargetOutputOptions } from './Targets/TargetOutputOptions';
 import { Il2CppTypeDefinitionInfo } from './Types';
-import { TypeImport, TypeRegistry } from './TypeRegistry';
+import { TypeRegistry } from './TypeRegistry';
+import { TypeImport } from './Types/Compiler/TypeImport';
 import { IGameAssembly } from './IGameAssembly';
 import { optimizeTypes } from './OptimizeTypes';
 
@@ -47,17 +48,7 @@ export async function codegen({
     optimizeTypes(gasm.structs);
   }
 
-  const typeRegistry = new TypeRegistry();
-  const typeList: (string | TypeImport)[] = types ?? ['@il2js/core'];
-  for (const entry of typeList) {
-    if (typeof entry === 'string') {
-      // eslint-disable-next-line import/no-dynamic-require, global-require
-      const { typeExport } = require(entry);
-      typeRegistry.addTypes({ from: entry, types: typeExport });
-    } else {
-      typeRegistry.addTypes(entry);
-    }
-  }
+  const typeRegistry = new TypeRegistry(types);
 
   for (const [targetName, targetOpts] of Object.values(targets)) {
     const Target = Object.values(Targets).find((target) => target.targetName === targetName);

@@ -11,6 +11,15 @@ import { TypeFilter, OutputFilter } from './OutputFilter';
 
 const findNodeModules: (opts?: { cwd?: string; relative?: boolean }) => string[] = require('find-node-modules');
 
+function getCachePath(...subdirs: string[]) {
+  const nodeModulesDir = path.resolve(findNodeModules()[0]);
+  const cachePath = path.join(nodeModulesDir, '.cache', 'il2js', ...subdirs);
+  if (!fs.existsSync(cachePath)) {
+    fs.mkdirSync(cachePath, { recursive: true });
+  }
+  return cachePath;
+}
+
 async function getIl2CppDumperExePath() {
   const devConfig = path.join(__dirname, '../il2cpp.config.js');
   if (fs.existsSync(devConfig)) {
@@ -18,10 +27,10 @@ async function getIl2CppDumperExePath() {
     return require(devConfig);
   }
 
-  const nodeModulesDir = path.resolve(findNodeModules()[0]);
-  const cachePath = path.join(nodeModulesDir, '.cache', 'il2js');
-  if (!fs.existsSync(cachePath)) {
-    fs.mkdirSync(cachePath, { recursive: true });
+  const cachePath = getCachePath();
+  const il2CppDumperExePath = path.join(cachePath, 'il2CppDumper.exe');
+  if (fs.existsSync(il2CppDumperExePath)) {
+    return il2CppDumperExePath;
   }
   // download il2cpp release
   await fetchGithubRelease(
@@ -32,29 +41,32 @@ async function getIl2CppDumperExePath() {
     (asset: { name: string }) => asset.name.endsWith('.zip'),
     false
   );
-  const il2CppDumperExePath = path.join(cachePath, 'il2CppDumper.exe');
   return il2CppDumperExePath;
 }
 
 export class GameAssembly implements IGameAssembly {
   public structs!: Il2JsonFile;
   public cached: boolean = false;
+  private readonly outDir: string;
 
   constructor(
     readonly gameAssemblyDllPath: string,
     readonly globalMetadataPath: string,
     readonly version: string,
-    private readonly outDir: string,
     private readonly filterOutputVisitor?: TypeFilter
-  ) {}
+  ) {
+    this.outDir = getCachePath(version);
+  }
 
   async load() {
-    await this.ensureDumpExists();
-    this.structs = JSON.parse(await fs.promises.readFile(path.resolve(this.outDir, `structs.json`), 'utf8'));
-    if (this.filterOutputVisitor) {
-      this.structs.TypeInfoList = Array.from(
-        new OutputFilter(this.structs).include(this.filterOutputVisitor).typesList.values()
-      );
+    if (!this.structs) {
+      await this.ensureDumpExists();
+      this.structs = JSON.parse(await fs.promises.readFile(path.resolve(this.outDir, `structs.json`), 'utf8'));
+      if (this.filterOutputVisitor) {
+        this.structs.TypeInfoList = Array.from(
+          new OutputFilter(this.structs).include(this.filterOutputVisitor).typesList.values()
+        );
+      }
     }
   }
 
