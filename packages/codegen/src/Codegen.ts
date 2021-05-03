@@ -1,22 +1,16 @@
 import path from 'path';
 import fs from 'fs';
-import { assert, ValueOf } from '@il2js/core';
-import { CodegenApi, TargetOptions, Targets } from './Targets';
-import { TargetOutputOptions } from './Targets/TargetOutputOptions';
+import { assert } from '@il2js/core';
+import { CodegenApi, Targets } from './Targets';
 import { Il2CppTypeDefinitionInfo } from './Types';
 import { TypeRegistry } from './TypeRegistry';
-import { TypeImport } from './Types/Compiler/TypeImport';
-import { IGameAssembly } from './IGameAssembly';
 import { optimizeTypes } from './OptimizeTypes';
+import { Il2JsConfig, Il2JsConfigFile } from './Il2JsConfigFile';
+import { GameAssembly, isGameAssembly } from './GameAssembly';
+import { executeVisitor } from './TypeVisitorExecutor';
 
 export interface CodegenOptions {
-  gasm: IGameAssembly;
-  targets: [ValueOf<typeof Targets>['targetName'], TargetOptions][];
-  output: TargetOutputOptions;
-  types?: (string | TypeImport)[];
-  force?: boolean;
   api?: CodegenApi;
-  optimize?: boolean;
   progressCallback?: (n: number, m: number, label: string, item?: Il2CppTypeDefinitionInfo) => void;
 }
 
@@ -26,16 +20,11 @@ const defaultCodegenApi: CodegenApi = {
   },
 };
 
-export async function codegen({
-  gasm,
-  output,
-  targets,
-  types,
-  force,
-  progressCallback,
-  api,
-  optimize,
-}: CodegenOptions): Promise<void> {
+export async function codegen(config: Il2JsConfigFile, { api, progressCallback }: CodegenOptions = {}): Promise<void> {
+  const { gameAssembly, output, targets, types, force, optimize, filter, visitors } = config;
+  const gasm = isGameAssembly(gameAssembly)
+    ? gameAssembly
+    : new GameAssembly(gameAssembly.dll, gameAssembly.metadata, gameAssembly.version, filter);
   const outputFile = path.join(output.outputDir, output.entry);
   if (gasm.cached && fs.existsSync(outputFile) && !force) {
     console.log(`Re-using entry ${outputFile}`);
@@ -44,24 +33,40 @@ export async function codegen({
 
   await gasm.load();
 
+  if (visitors) {
+    visitors.forEach((visitor) => {
+      gasm.structs.TypeInfoList = executeVisitor(visitor, gasm.structs.TypeInfoList);
+    });
+  }
+
   if (optimize) {
     optimizeTypes(gasm.structs);
   }
 
   const typeRegistry = new TypeRegistry(types);
 
-  for (const [targetName, targetOpts] of Object.values(targets)) {
+  for (const currentTarget of Object.values(targets)) {
+    let targetName: string;
+    let targetConfig: Il2JsConfig = config;
+    if (typeof currentTarget !== 'string') {
+      targetName = currentTarget[0];
+      if (currentTarget[1]) {
+        targetConfig = { ...config, ...currentTarget[1] };
+      }
+    } else {
+      targetName = currentTarget;
+    }
     const Target = Object.values(Targets).find((target) => target.targetName === targetName);
     assert(Target, RangeError);
-    const target = new Target(
+    const targetInstance = new Target(
       path.basename(gasm.gameAssemblyDllPath),
       gasm.version,
       typeRegistry,
       api ?? defaultCodegenApi
     );
     // eslint-disable-next-line no-await-in-loop
-    await target.process(gasm.structs, targetOpts, progressCallback);
+    await targetInstance.process(gasm.structs, targetConfig, progressCallback);
     // eslint-disable-next-line no-await-in-loop
-    await target.write(output);
+    await targetInstance.write(output);
   }
 }

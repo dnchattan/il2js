@@ -44,6 +44,10 @@ async function getIl2CppDumperExePath() {
   return il2CppDumperExePath;
 }
 
+export function isGameAssembly(value: unknown): value is IGameAssembly {
+  return !!(value as IGameAssembly).gameAssemblyDllPath;
+}
+
 export class GameAssembly implements IGameAssembly {
   public structs!: Il2JsonFile;
   public cached: boolean = false;

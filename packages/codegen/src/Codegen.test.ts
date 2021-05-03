@@ -1,6 +1,4 @@
 /* eslint-disable no-param-reassign */
-/* eslint-disable max-classes-per-file */
-import { il2js } from '@il2js/core';
 import { codegen } from './Codegen';
 import { IGameAssembly } from './IGameAssembly';
 import { mockIl2CppTypeDefinitionInfo, mockIl2CppTypeInfo } from './Types';
@@ -10,8 +8,9 @@ describe('codegen', () => {
     const writeFile: jest.Mock<Promise<void>, [path: string, value: string | Buffer]> = jest.fn((_path, _value) =>
       Promise.resolve()
     );
+    const codegenOpts = { api: { writeFile } };
     const load: jest.Mock<Promise<void>, []> = jest.fn();
-    const gasm: IGameAssembly = {
+    const gameAssembly: IGameAssembly = {
       cached: false,
       gameAssemblyDllPath: 'foo/TestGameAssembly.dll',
       globalMetadataPath: 'foo/metadata/globalMetadata.dat',
@@ -51,16 +50,18 @@ describe('codegen', () => {
         },
       },
     };
-    await codegen({
-      gasm,
-      output: {
-        entry: 'index.ts',
-        outputDir: 'out',
+    await codegen(
+      {
+        gameAssembly,
+        output: {
+          entry: 'index.ts',
+          outputDir: 'out',
+        },
+        targets: [['typescript', { rootNamespace: 'codegen' }]],
+        types: [],
       },
-      targets: [['typescript', { rootNamespace: 'codegen' }]],
-      api: { writeFile },
-      types: [],
-    });
+      codegenOpts
+    );
     expect(writeFile.mock.calls[0]).toMatchInlineSnapshot(`
       Array [
         "out\\\\index.ts",
@@ -97,15 +98,12 @@ describe('codegen', () => {
     `);
   });
   it('with custom typelib', async () => {
-    class CustomType extends il2js.NativeStruct {
-      public static size = 0;
-      public static fieldNames: string[] = [];
-    }
     const writeFile: jest.Mock<Promise<void>, [path: string, value: string | Buffer]> = jest.fn((_path, _value) =>
       Promise.resolve()
     );
+    const codegenOpts = { api: { writeFile } };
     const load: jest.Mock<Promise<void>, []> = jest.fn();
-    const gasm: IGameAssembly = {
+    const gameAssembly: IGameAssembly = {
       cached: false,
       gameAssemblyDllPath: 'foo/TestGameAssembly.dll',
       globalMetadataPath: 'foo/metadata/globalMetadata.dat',
@@ -134,16 +132,21 @@ describe('codegen', () => {
         TypeNameToStaticMethods: {},
       },
     };
-    await codegen({
-      gasm,
-      output: {
-        entry: 'index.ts',
-        outputDir: 'out',
+    await codegen(
+      {
+        gameAssembly,
+        output: {
+          entry: 'index.ts',
+          outputDir: 'out',
+        },
+        targets: [['typescript', { rootNamespace: 'codegen' }]],
+        types: [
+          '@il2js/core',
+          { from: './customTypes', types: { Custom: { Namespace: { CustomType: { name: 'CustomType' } } } } },
+        ],
       },
-      targets: [['typescript', { rootNamespace: 'codegen' }]],
-      api: { writeFile },
-      types: ['@il2js/core', { from: './customTypes', types: { Custom: { Namespace: { CustomType } } } }],
-    });
+      codegenOpts
+    );
     expect(writeFile.mock.calls[0]).toMatchInlineSnapshot(`
       Array [
         "out\\\\index.ts",
@@ -168,15 +171,12 @@ describe('codegen', () => {
     `);
   });
   it('inject with custom type override', async () => {
-    class CustomType extends il2js.NativeStruct {
-      public static size = 0;
-      public static fieldNames: string[] = [];
-    }
     const writeFile: jest.Mock<Promise<void>, [path: string, value: string | Buffer]> = jest.fn((_path, _value) =>
       Promise.resolve()
     );
+    const codegenOpts = { api: { writeFile } };
     const load: jest.Mock<Promise<void>, []> = jest.fn();
-    const gasm: IGameAssembly = {
+    const gameAssembly: IGameAssembly = {
       cached: false,
       gameAssemblyDllPath: 'foo/TestGameAssembly.dll',
       globalMetadataPath: 'foo/metadata/globalMetadata.dat',
@@ -212,37 +212,35 @@ describe('codegen', () => {
         TypeNameToStaticMethods: {},
       },
     };
-    await codegen({
-      gasm,
-      output: {
-        entry: 'index.ts',
-        outputDir: 'out',
-      },
-      targets: [
-        [
-          'typescript',
+    await codegen(
+      {
+        gameAssembly,
+        output: {
+          entry: 'index.ts',
+          outputDir: 'out',
+        },
+        rootNamespace: 'codegen',
+        types: ['@il2js/core', { from: './customTypes', types: { Injected: { Bar: { name: 'Bar' } } } }],
+        visitors: [
           {
-            rootNamespace: 'codegen',
-            visitors: {
-              class(type) {
-                if (type.Type.TypeName === 'Bar' && type.Type.Namespace === 'Test') {
-                  return undefined;
-                }
-                return type;
-              },
-              typeRef(type) {
-                if (type.TypeName === 'Bar' && type.Namespace === 'Test') {
-                  type.Namespace = 'Injected';
-                }
-                return type;
-              },
+            visitTypeDef(type) {
+              if (type.Type.TypeName === 'Bar' && type.Type.Namespace === 'Test') {
+                return undefined;
+              }
+              return type;
+            },
+            visitTypeUsage(type) {
+              if (type.TypeName === 'Bar' && type.Namespace === 'Test') {
+                type.Namespace = 'Injected';
+              }
+              return type;
             },
           },
         ],
-      ],
-      api: { writeFile },
-      types: ['@il2js/core', { from: './customTypes', types: { Injected: { Bar: CustomType } } }],
-    });
+        targets: ['typescript'],
+      },
+      codegenOpts
+    );
     expect(writeFile.mock.calls[0]).toMatchInlineSnapshot(`
       Array [
         "out\\\\index.ts",

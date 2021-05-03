@@ -1,8 +1,7 @@
 import ts, { factory } from 'typescript';
-import multimatch from 'multimatch';
 import toposort from 'toposort';
 import { DefaultedMap } from '@il2js/core';
-import type { Il2JsonFile, Il2CppTypeDefinitionInfo, Il2CppTypeInfo, ITypeRegistry } from '../..';
+import type { Il2JsonFile, Il2CppTypeDefinitionInfo, Il2CppTypeInfo, ITypeRegistry, Il2JsConfig } from '../..';
 import type { TargetOptions } from '../TargetOptions';
 import { generateClass } from './Utils/StructHelpers';
 import type { CodegenContext } from '../CodegenContext';
@@ -113,27 +112,13 @@ export function processNestedStructs(structs: Il2CppTypeDefinitionInfo[]): Il2Cp
   return structs;
 }
 
-function filterStructs(structs: Il2CppTypeDefinitionInfo[], opts: TargetOptions) {
+function filterStructs(structs: Il2CppTypeDefinitionInfo[]) {
   return structs.filter((si) => {
     // remove invalid named structs
     if (si.Type.TypeName.indexOf('<') > -1) {
       return false;
     }
     if (si.IsGenericInstance) {
-      return false;
-    }
-    const imageFilter = opts.imageGlobs && si.ImageName && multimatch(si.ImageName, opts.imageGlobs);
-    const namespaceFilter =
-      opts.namespaceGlobs &&
-      multimatch(si.Type.Namespace === undefined ? '<global>' : si.Type.Namespace, opts.namespaceGlobs);
-    const typeNameFilter = opts.typeNameGlobs && multimatch(si.Type.TypeName, opts.typeNameGlobs);
-    if (imageFilter && imageFilter.length === 0) {
-      return false;
-    }
-    if (namespaceFilter && namespaceFilter.length === 0) {
-      return false;
-    }
-    if (typeNameFilter && typeNameFilter.length === 0) {
       return false;
     }
     return true;
@@ -144,7 +129,7 @@ export async function generateFileAsync(
   assembly: string,
   version: string,
   types: ITypeRegistry,
-  opts?: Partial<TargetOptions>,
+  opts: Il2JsConfig,
   progressCallback?: (n: number, m: number, label: string, item?: Il2CppTypeDefinitionInfo) => void
 ): Promise<ts.Node[]> {
   const options = { ...defaultOpts, ...opts };
@@ -153,7 +138,6 @@ export async function generateFileAsync(
     rootNamespace: options.rootNamespace,
     typeFunctions: TypeNameToStaticMethods,
     types,
-    visitors: opts?.visitors,
   };
 
   let n = 0;
@@ -164,7 +148,7 @@ export async function generateFileAsync(
   typesList = processNestedStructs(typesList);
 
   progressCallback?.(n++, TypeInfoList.length + 10, 'Filtering input');
-  typesList = filterStructs(typesList, options);
+  typesList = filterStructs(typesList);
 
   progressCallback?.(n++, typesList.length + 10, 'Removing empty types');
 

@@ -4,6 +4,9 @@
   "main": "lib/index.js",
   "author": "dnchattan@gmail.com",
   "license": "MIT",
+  "bin": {
+    "il2js": "./cli.js"
+  },
   "scripts": {
     "test": "jest",
     "lint": "eslint ./src --ext .ts,.tsx",
@@ -15,16 +18,19 @@
   },
   "dependencies": {
     "@terascope/fetch-github-release": "^0.7.4",
+    "caporal": "^1.4.0",
     "chalk": "^4.1.1",
     "find-node-modules": "^2.1.2",
     "md5": "^2.3.0",
     "multimatch": "^5.0.0",
+    "terminal-kit": "^2.1.0",
     "toposort": "^2.0.2"
   },
   "devDependencies": {
     "@il2js/core": "^0.1.9",
     "@types/jest": "^26.0.20",
     "@types/md5": "^2.3.0",
+    "@types/terminal-kit": "^1.28.2",
     "@types/toposort": "^2.0.3",
     "backfill": "^6.1.0",
     "jest": "^26.6.3",
