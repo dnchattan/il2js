@@ -25,16 +25,18 @@
       "type": "node",
       "request": "launch",
       "name": "Run local test",
-      "cwd": "${workspaceRoot}/packages/codegen",
+      "cwd": "${workspaceRoot}/packages/codegen/LocalTest",
       "args": [
-        "--run",
-        "--force"
+        "generate",
+        "--force",
+        "--config",
+        ".il2js.config.js"
       ],
       "runtimeArgs": [
         "--nolazy",
         "-r",
         "${workspaceFolder}/scripts/enable-ts",
-        "${workspaceRoot}/packages/codegen/src/LocalTest.ts"
+        "${workspaceRoot}/packages/codegen/src/Cli.ts"
       ],
       "skipFiles": [
         "<node_internals>/**"

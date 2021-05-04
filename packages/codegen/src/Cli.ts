@@ -19,9 +19,16 @@ interface CliArguments {
 async function generate(_: never, originalArgs: Record<string, any>, _logger: ReturnType<typeof caporal.logger>) {
   // eslint-disable-next-line no-restricted-syntax
   for (const key in originalArgs) {
-    if (typeof originalArgs[key] === 'boolean' && /no[A-Z]/.exec(key)) {
-      // eslint-disable-next-line no-param-reassign
-      originalArgs[key] = !originalArgs[key];
+    if (typeof originalArgs[key] === 'boolean') {
+      if (originalArgs[key] === true) {
+        if (/no[A-Z]/.exec(key)) {
+          // eslint-disable-next-line no-param-reassign
+          originalArgs[key] = !originalArgs[key];
+        }
+      } else {
+        // eslint-disable-next-line no-param-reassign
+        delete originalArgs[key];
+      }
     }
   }
   const args: CliArguments = originalArgs as any;
@@ -82,7 +89,7 @@ cli
     path.join(process.cwd(), '.il2js.config.js')
   )
   .option('--force', 'Force build without caching')
-  .option('--optimize', 'Enable optimization')
-  .option('--no-optimize', 'Disable optimization')
+  .option('--optimize', 'Enable optimization', caporal.BOOLEAN)
+  .option('--no-optimize', 'Disable optimization', caporal.BOOLEAN)
   .action(generate as any);
 cli.parse(process.argv);
