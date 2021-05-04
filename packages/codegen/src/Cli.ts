@@ -36,7 +36,7 @@ async function generate(_: never, originalArgs: Record<string, any>, _logger: Re
   const configPath = path.isAbsolute(args.config) ? args.config : path.join(process.cwd(), args.config);
 
   // eslint-disable-next-line import/no-dynamic-require, global-require
-  const config = require(configPath) as Il2JsConfigFile;
+  const config = await Promise.resolve(require(configPath) as Il2JsConfigFile);
   if (args.force !== undefined) {
     config.force = args.force;
   }
