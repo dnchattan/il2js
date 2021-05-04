@@ -2,6 +2,21 @@
   "name": "@il2js/core",
   "entries": [
     {
+      "date": "Tue, 04 May 2021 15:34:40 GMT",
+      "tag": "@il2js/core_v0.1.11",
+      "version": "0.1.11",
+      "comments": {
+        "patch": [
+          {
+            "comment": "change to es2018",
+            "author": "dnchattan@gmail.com",
+            "commit": "9d25964796618b0f086ec74c9854235047b68873",
+            "package": "@il2js/core"
+          }
+        ]
+      }
+    },
+    {
       "date": "Mon, 03 May 2021 21:50:47 GMT",
       "tag": "@il2js/core_v0.1.10",
       "version": "0.1.10",
