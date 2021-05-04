@@ -12,19 +12,7 @@ export class OutputFilter {
   readonly typesList: Set<Il2CppTypeDefinitionInfo> = new Set();
   readonly visitors: OncePer<TypeFilter, Il2CppTypeDefinitionInfo | Il2CppTypeInfo> = new OncePer();
 
-  constructor(private file: Il2JsonFile) {
-    for (const type of file.TypeInfoList) {
-      if (type.Type.DeclaringType) {
-        const declType = this.lookupType(type.Type.DeclaringType);
-        if (declType) {
-          if (!declType.NestedTypes) {
-            declType.NestedTypes = [];
-          }
-          declType.NestedTypes.push(type);
-        }
-      }
-    }
-  }
+  constructor(private file: Il2JsonFile) {}
 
   lookupType(type: Il2CppTypeInfo): Il2CppTypeDefinitionInfo | undefined {
     return this.file.TypeInfoList.find(
