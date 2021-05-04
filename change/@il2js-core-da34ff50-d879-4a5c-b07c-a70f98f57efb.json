@@ -1,0 +1,7 @@
+{
+  "type": "patch",
+  "comment": "change to es2018",
+  "packageName": "@il2js/core",
+  "email": "dnchattan@gmail.com",
+  "dependentChangeType": "patch"
+}
