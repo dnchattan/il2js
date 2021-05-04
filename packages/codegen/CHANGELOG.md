@@ -1,8 +1,16 @@
 # Change Log - @il2js/codegen
 
-This log was last generated on Mon, 03 May 2021 21:50:47 GMT and should not be manually modified.
+This log was last generated on Tue, 04 May 2021 11:58:59 GMT and should not be manually modified.
 
 <!-- Start content -->
+
+## 0.2.17
+
+Tue, 04 May 2021 11:58:59 GMT
+
+### Patches
+
+- allow async config values (dnchattan@gmail.com)
 
 ## 0.2.16
 
