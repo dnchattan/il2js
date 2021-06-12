@@ -1,5 +1,5 @@
 import ts, { factory } from 'typescript';
-import { addressToNumber } from '@il2js/core';
+import { addressToNumber, excludeUndefined } from '@il2js/core';
 import type { Il2CppTypeDefinitionInfo, Il2CppTypeInfo } from '../../../Types';
 // eslint-disable-next-line import/no-cycle
 import { generateFieldAccessor } from './FieldHelpers';
@@ -106,11 +106,16 @@ export function writeFieldNameList(
 }
 
 export function writeFunctions(typeDef: Il2CppTypeDefinitionInfo, context: CodegenContext) {
-  const fns =
-    context.typeFunctions[
-      // hack: omit root namespace for this name since the original datasource isn't prefixed
-      context.types.getTypeName(typeDef.Type, { ...context, rootNamespace: '' }, undefined /* relativeTo */)
-    ] ?? [];
+  const fns = excludeUndefined(
+    (
+      context.typeFunctions[
+        // hack: omit root namespace for this name since the original datasource isn't prefixed
+        context.types.getTypeName(typeDef.Type, { ...context, rootNamespace: '' }, undefined /* relativeTo */)
+      ] ?? []
+    ).map((methodInfo) =>
+      context.visitors?.staticMethod ? context.visitors.staticMethod(methodInfo, typeDef, context) : methodInfo
+    )
+  );
 
   const uniqueNames = new Map<string, number>();
   const elements: ts.ObjectLiteralElementLike[] = [];
