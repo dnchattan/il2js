@@ -2,6 +2,21 @@
   "name": "@il2js/codegen",
   "entries": [
     {
+      "date": "Sat, 12 Jun 2021 21:50:54 GMT",
+      "tag": "@il2js/codegen_v0.2.20",
+      "version": "0.2.20",
+      "comments": {
+        "patch": [
+          {
+            "comment": "add staticmethod visitor",
+            "author": "dnchattan@gmail.com",
+            "commit": "4cec0852186f3a9924c499ba8aeb68f3ac7df5de",
+            "package": "@il2js/codegen"
+          }
+        ]
+      }
+    },
+    {
       "date": "Tue, 04 May 2021 15:34:40 GMT",
       "tag": "@il2js/codegen_v0.2.19",
       "version": "0.2.19",

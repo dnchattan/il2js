@@ -1,6 +1,6 @@
 {
   "name": "@il2js/codegen",
-  "version": "0.2.19",
+  "version": "0.2.20",
   "main": "lib/index.js",
   "author": "dnchattan@gmail.com",
   "license": "MIT",

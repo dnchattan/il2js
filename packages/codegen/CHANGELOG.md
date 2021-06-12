@@ -1,8 +1,16 @@
 # Change Log - @il2js/codegen
 
-This log was last generated on Tue, 04 May 2021 15:34:40 GMT and should not be manually modified.
+This log was last generated on Sat, 12 Jun 2021 21:50:54 GMT and should not be manually modified.
 
 <!-- Start content -->
+
+## 0.2.20
+
+Sat, 12 Jun 2021 21:50:54 GMT
+
+### Patches
+
+- add staticmethod visitor (dnchattan@gmail.com)
 
 ## 0.2.19
 
