@@ -2,7 +2,6 @@ import ts, { factory } from 'typescript';
 import toposort from 'toposort';
 import { DefaultedMap } from '@il2js/core';
 import type { Il2JsonFile, Il2CppTypeDefinitionInfo, Il2CppTypeInfo, ITypeRegistry, Il2JsConfig } from '../..';
-import type { TargetOptions } from '../TargetOptions';
 import { generateClass } from './Utils/StructHelpers';
 import type { CodegenContext } from '../CodegenContext';
 
@@ -11,11 +10,6 @@ export interface Namespace {
   childNamespaces: Namespace[];
   childTypes: Il2CppTypeDefinitionInfo[];
 }
-
-const defaultOpts: TargetOptions = {
-  typeNameGlobs: ['*', '!*.<*', '!*=*'],
-  rootNamespace: 'codegen',
-};
 
 function orderTypes(typeDef: Il2CppTypeDefinitionInfo[], context: CodegenContext): Il2CppTypeDefinitionInfo[] {
   const allStructs = new Map<string, Il2CppTypeDefinitionInfo>(
@@ -132,10 +126,8 @@ export async function generateFileAsync(
   opts: Il2JsConfig,
   progressCallback?: (n: number, m: number, label: string, item?: Il2CppTypeDefinitionInfo) => void
 ): Promise<ts.Node[]> {
-  const options = { ...defaultOpts, ...opts };
-
   const context: CodegenContext = {
-    rootNamespace: options.rootNamespace,
+    rootNamespace: opts.rootNamespace ?? 'codegen',
     typeFunctions: TypeNameToStaticMethods,
     types,
   };

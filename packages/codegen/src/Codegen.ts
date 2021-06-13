@@ -7,7 +7,7 @@ import { TypeRegistry } from './TypeRegistry';
 import { optimizeTypes } from './OptimizeTypes';
 import { Il2JsConfig, Il2JsConfigFile } from './Il2JsConfigFile';
 import { GameAssembly, isGameAssembly } from './GameAssembly';
-import { executeVisitor } from './TypeVisitorExecutor';
+import { executeMethodVisitor, executeVisitor } from './TypeVisitorExecutor';
 
 export interface CodegenOptions {
   api?: CodegenApi;
@@ -36,6 +36,7 @@ export async function codegen(config: Il2JsConfigFile, { api, progressCallback }
   if (visitors) {
     visitors.forEach((visitor) => {
       gasm.structs.TypeInfoList = executeVisitor(visitor, gasm.structs.TypeInfoList);
+      gasm.structs.TypeNameToStaticMethods = executeMethodVisitor(visitor, gasm.structs.TypeNameToStaticMethods);
     });
   }
 

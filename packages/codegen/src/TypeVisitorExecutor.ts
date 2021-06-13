@@ -1,7 +1,26 @@
 /* eslint-disable no-param-reassign */
 import { excludeUndefined } from '@il2js/core';
-import type { Il2CppTypeDefinitionInfo } from './Types';
+import type { Il2CppStaticMethodInfo, Il2CppTypeDefinitionInfo } from './Types';
 import type { TypeVisitor } from './Types/Compiler/TypeVisitor';
+
+export function executeMethodVisitor(
+  visitor: Readonly<TypeVisitor>,
+  methods: Record<string, Il2CppStaticMethodInfo[]>
+): Record<string, Il2CppStaticMethodInfo[]> {
+  if (!visitor.visitStaticMethod) {
+    return methods;
+  }
+  const result: Record<string, Il2CppStaticMethodInfo[]> = {};
+  for (const [typeName, methodInfos] of Object.entries(methods)) {
+    const visitorResult = excludeUndefined(
+      methodInfos.map((methodInfo) => visitor.visitStaticMethod!(methodInfo, typeName))
+    );
+    if (visitorResult && visitorResult.length) {
+      result[typeName] = visitorResult;
+    }
+  }
+  return result;
+}
 
 export function executeVisitor(
   visitor: Readonly<TypeVisitor>,

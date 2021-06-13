@@ -107,14 +107,10 @@ export function writeFieldNameList(
 
 export function writeFunctions(typeDef: Il2CppTypeDefinitionInfo, context: CodegenContext) {
   const fns = excludeUndefined(
-    (
-      context.typeFunctions[
-        // hack: omit root namespace for this name since the original datasource isn't prefixed
-        context.types.getTypeName(typeDef.Type, { ...context, rootNamespace: '' }, undefined /* relativeTo */)
-      ] ?? []
-    ).map((methodInfo) =>
-      context.visitors?.staticMethod ? context.visitors.staticMethod(methodInfo, typeDef, context) : methodInfo
-    )
+    context.typeFunctions[
+      // hack: omit root namespace for this name since the original datasource isn't prefixed
+      context.types.getTypeName(typeDef.Type, { ...context, rootNamespace: '' }, undefined /* relativeTo */)
+    ] ?? []
   );
 
   const uniqueNames = new Map<string, number>();
