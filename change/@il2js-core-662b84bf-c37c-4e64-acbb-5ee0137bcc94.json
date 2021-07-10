@@ -1,0 +1,7 @@
+{
+  "type": "patch",
+  "comment": "remove caching and performance measures to eliminate memory leaks",
+  "packageName": "@il2js/core",
+  "email": "dnchattan@gmail.com",
+  "dependentChangeType": "patch"
+}
