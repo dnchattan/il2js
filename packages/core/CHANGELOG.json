@@ -2,6 +2,21 @@
   "name": "@il2js/core",
   "entries": [
     {
+      "date": "Sat, 10 Jul 2021 14:27:30 GMT",
+      "tag": "@il2js/core_v0.1.12",
+      "version": "0.1.12",
+      "comments": {
+        "patch": [
+          {
+            "comment": "remove caching and performance measures to eliminate memory leaks",
+            "author": "dnchattan@gmail.com",
+            "commit": "9b7a2efddf116fbba4c9bd5056a3060c03a08e24",
+            "package": "@il2js/core"
+          }
+        ]
+      }
+    },
+    {
       "date": "Tue, 04 May 2021 15:34:40 GMT",
       "tag": "@il2js/core_v0.1.11",
       "version": "0.1.11",

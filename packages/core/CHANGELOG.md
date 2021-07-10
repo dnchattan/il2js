@@ -1,8 +1,16 @@
 # Change Log - @il2js/core
 
-This log was last generated on Tue, 04 May 2021 15:34:40 GMT and should not be manually modified.
+This log was last generated on Sat, 10 Jul 2021 14:27:30 GMT and should not be manually modified.
 
 <!-- Start content -->
+
+## 0.1.12
+
+Sat, 10 Jul 2021 14:27:30 GMT
+
+### Patches
+
+- remove caching and performance measures to eliminate memory leaks (dnchattan@gmail.com)
 
 ## 0.1.11
 
