@@ -10,11 +10,15 @@ import { PrimitiveTypes } from '../../PrimitiveTypes';
 import type { Il2CppClass } from './MethodInfo';
 import { IOContext } from '../../IOContext';
 import { isPrimitiveType, isNativeType } from '../../TypeHelpers';
+import { PerformanceMap } from './PerformanceMap';
 // eslint-disable-next-line import/no-cycle
 import { flattenValue } from './structToJSON';
-import { assert, Extends, StaticAssert, Tail } from '../../Helpers';
+import { assert, DefaultedMap, Extends, StaticAssert, Tail } from '../../Helpers';
 
 let idValue = 0;
+
+const performanceData = new PerformanceMap();
+(global as any).NativeStruct_performanceData = performanceData;
 
 const AddressField = Symbol('address');
 
@@ -35,6 +39,7 @@ export abstract class NativeStruct implements NativeTypeInstance {
     return new InstanceType(address);
   }
 
+  protected valueCache: DefaultedMap<Offset, Map<any, any>> = new DefaultedMap(() => new Map());
   protected structSize: Size;
   private ioContext: IOContext;
   public readonly $id: number;
@@ -135,19 +140,25 @@ export abstract class NativeStruct implements NativeTypeInstance {
     TCtor extends NativeType<T>,
     T extends NativeTypeInstance = NativeTypeInstance
   >(offset: Offset, FieldType: TCtor, indirection: number, ...typeArgs: TypeArgs): any {
-    const address = deref(this.ioContext, offsetAddress(this.address, offset), indirection);
-    if (!address) {
-      return undefined;
-    }
-    const result = new FieldType(address, ...typeArgs);
+    // TODO change to return T once nested templates are working!
+    // TODO: this breaks for ManagedArray
+    // assert(indirection > 1 || offsetAddress(offset, type.size) < this.structSize);
+    // log(`read field type '${chalk.cyanBright(type.name)}' @ +${chalk.magentaBright(`0x${hex(offset)}`)}`);
+    return this.getCachedValue(offset, FieldType, () => {
+      const address = deref(this.ioContext, offsetAddress(this.address, offset), indirection);
+      if (!address) {
+        return undefined;
+      }
+      const result = new FieldType(address, ...typeArgs);
 
-    ((result as unknown) as NativeStruct).ioContext = this.ioContext;
+      ((result as unknown) as NativeStruct).ioContext = this.ioContext;
 
-    if (result.unbox) {
-      return result.unbox();
-    }
+      if (result.unbox) {
+        return result.unbox();
+      }
 
-    return result;
+      return result;
+    });
   }
 
   protected static readField<
@@ -158,6 +169,12 @@ export abstract class NativeStruct implements NativeTypeInstance {
     },
     T extends NativeTypeInstance = NativeTypeInstance
   >(offset: Offset, FieldType: TCtor, indirection: number, ...typeArgs: TypeArgs): any {
+    // TODO change to return T once nested templates are working!
+    // log(
+    //   `read ${chalk.yellowBright('static')} field type '${chalk.cyanBright(type.name)}' @ +${chalk.magentaBright(
+    //     `0x${hex(offset)}`
+    //   )}`
+    // );
     const ioContext = getCurrentIOContext();
     const address = deref(ioContext, offsetAddress(this.address, offset), indirection);
     if (!address) {
@@ -169,9 +186,14 @@ export abstract class NativeStruct implements NativeTypeInstance {
 
   protected readTypePrimitive<T>(offset: Offset, type: Type | string, indirection: number): T {
     const refType = typeof type === 'string' ? PrimitiveTypes[type as keyof typeof PrimitiveTypes] : type;
-    const address = deref(this.ioContext, offsetAddress(this.address, offset), indirection);
-    const buf = this.ioContext.read(address, refType.size);
-    return refType.get(buf, 0);
+    // log(
+    //   `read field type '${chalk.cyanBright(refType.name ?? 'unknown')}' @ +${chalk.magentaBright(`0x${hex(offset)}`)}`
+    // );
+    return this.getCachedValue(offset, refType, () => {
+      const address = deref(this.ioContext, offsetAddress(this.address, offset), indirection);
+      const buf = this.ioContext.read(address, refType.size);
+      return refType.get(buf, 0);
+    });
   }
 
   protected static readTypePrimitive<T>(offset: Offset, type: Type | string, indirection: number): T {
@@ -185,6 +207,18 @@ export abstract class NativeStruct implements NativeTypeInstance {
     const address = deref(ioContext, offsetAddress(this.address, offset), indirection);
     const buf = ioContext.read(address, refType.size);
     return refType.get(buf, 0);
+  }
+
+  protected getCachedValue<T, U>(offset: Offset, type: T): U | undefined;
+  protected getCachedValue<T, U>(offset: Offset, type: T, readValueFn: () => U): U;
+  protected getCachedValue<T, U>(offset: Offset, type: T, readValueFn?: () => U): U | undefined {
+    const offsetMap = this.valueCache.get(offset);
+    let value = offsetMap.get(type);
+    if (value === undefined && readValueFn) {
+      value = performanceData.measureReadOperation(this, readValueFn);
+      offsetMap.set(type, value);
+    }
+    return value;
   }
 }
 
