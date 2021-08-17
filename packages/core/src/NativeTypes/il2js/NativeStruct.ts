@@ -105,6 +105,15 @@ export abstract class NativeStruct implements NativeTypeInstance {
     return type.size;
   }
 
+  public static sizeofPrimitiveOrPtr(type: NativeType | string | Type): Size {
+    if (isPrimitiveType(type)) {
+      const refType = PrimitiveTypes[type as keyof typeof PrimitiveTypes];
+      assert(refType, ReferenceError);
+      return refType.size;
+    }
+    return 8;
+  }
+
   public toJSON(): {};
   public toJSON(depth: number): {};
   public toJSON<TStub = any>(depth: number, getStubFn: (object: NativeTypeInstance) => TStub): {};

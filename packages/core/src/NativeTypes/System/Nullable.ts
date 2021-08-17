@@ -23,6 +23,6 @@ export class Nullable<T extends FieldType = UnknownObject> extends NativeStruct 
   }
 
   public get hasValue(): boolean {
-    return this.readTypePrimitive(8, types.bool, 1);
+    return this.readTypePrimitive(NativeStruct.sizeofPrimitiveOrPtr(this.vtype), types.bool, 1);
   }
 }
