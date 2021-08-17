@@ -1,7 +1,0 @@
-{
-  "type": "patch",
-  "comment": "fix offset for nullable",
-  "packageName": "@il2js/core",
-  "email": "dnchattan@gmail.com",
-  "dependentChangeType": "patch"
-}

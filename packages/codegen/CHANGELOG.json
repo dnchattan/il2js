@@ -2,6 +2,21 @@
   "name": "@il2js/codegen",
   "entries": [
     {
+      "date": "Tue, 17 Aug 2021 19:38:50 GMT",
+      "tag": "@il2js/codegen_v0.2.24",
+      "version": "0.2.24",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Bump @il2js/core to v0.1.14",
+            "author": "dnchattan@gmail.com",
+            "commit": "18d0e7451ce9a3c78a4a1cbef2b2671fdf3f95de",
+            "package": "@il2js/codegen"
+          }
+        ]
+      }
+    },
+    {
       "date": "Tue, 17 Aug 2021 11:56:44 GMT",
       "tag": "@il2js/codegen_v0.2.23",
       "version": "0.2.23",

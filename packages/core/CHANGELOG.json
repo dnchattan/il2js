@@ -2,6 +2,21 @@
   "name": "@il2js/core",
   "entries": [
     {
+      "date": "Tue, 17 Aug 2021 19:38:50 GMT",
+      "tag": "@il2js/core_v0.1.14",
+      "version": "0.1.14",
+      "comments": {
+        "patch": [
+          {
+            "comment": "fix offset for nullable",
+            "author": "dnchattan@gmail.com",
+            "commit": "18d0e7451ce9a3c78a4a1cbef2b2671fdf3f95de",
+            "package": "@il2js/core"
+          }
+        ]
+      }
+    },
+    {
       "date": "Tue, 17 Aug 2021 11:56:44 GMT",
       "tag": "@il2js/core_v0.1.13",
       "version": "0.1.13",
