@@ -19,7 +19,7 @@ export class Nullable<T extends FieldType = UnknownObject> extends NativeStruct 
   }
 
   public get value(): T | undefined {
-    return this.read(0, this.vtype, 2);
+    return this.read(0, this.vtype, undefined /* indirection (=auto) */);
   }
 
   public get hasValue(): boolean {
