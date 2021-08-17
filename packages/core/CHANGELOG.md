@@ -1,8 +1,16 @@
 # Change Log - @il2js/core
 
-This log was last generated on Sat, 10 Jul 2021 14:27:30 GMT and should not be manually modified.
+This log was last generated on Tue, 17 Aug 2021 11:56:44 GMT and should not be manually modified.
 
 <!-- Start content -->
+
+## 0.1.13
+
+Tue, 17 Aug 2021 11:56:44 GMT
+
+### Patches
+
+- add nullable type (dnchattan@gmail.com)
 
 ## 0.1.12
 

@@ -2,6 +2,21 @@
   "name": "@il2js/core",
   "entries": [
     {
+      "date": "Tue, 17 Aug 2021 11:56:44 GMT",
+      "tag": "@il2js/core_v0.1.13",
+      "version": "0.1.13",
+      "comments": {
+        "patch": [
+          {
+            "comment": "add nullable type",
+            "author": "dnchattan@gmail.com",
+            "commit": "8fb4a08c74b3d13dc361ee5dd95252f3d9a517be",
+            "package": "@il2js/core"
+          }
+        ]
+      }
+    },
+    {
       "date": "Sat, 10 Jul 2021 14:27:30 GMT",
       "tag": "@il2js/core_v0.1.12",
       "version": "0.1.12",
