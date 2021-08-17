@@ -28,11 +28,6 @@ export class Func<T extends FieldType = UnknownObject> extends TypeStub {
   }
 }
 export class Exception extends TypeStub {}
-export class Nullable<T extends FieldType = UnknownObject> extends TypeStub {
-  constructor(address: Address, _type: NativeType<NativeTypeInstance> | string = typeof UnknownObject) {
-    super(address);
-  }
-}
 
 export namespace Diagnostics {
   export class Stopwatch extends TypeStub {}
